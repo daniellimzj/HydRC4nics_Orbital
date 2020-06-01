@@ -1,4 +1,4 @@
-# Hydrc4nics
+# HydRC4nics
 
 Smart autonmous hydroponic gardening system in collaboration with NUS Residential College 4, RC4SPACE & RC4Earth.
 

@@ -1,0 +1,9 @@
+**/.idea/*
+**/.vs/*
+**/.vscode/*
+**/*.db
+**/Migrations/*
+**/obj/*
+**/bin/*
+**/*.deb
+**/__pycache__/*

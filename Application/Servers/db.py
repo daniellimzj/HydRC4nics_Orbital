@@ -1,0 +1,1 @@
+# To act as module between database and User interfaces

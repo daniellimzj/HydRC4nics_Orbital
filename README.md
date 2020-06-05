@@ -52,3 +52,93 @@ Database
 - Entity Framework Core
 - REST API
 - Serial Communication
+
+## Setup
+
+1. Install Python Packages
+
+    ```bash
+    pip3 install -r ./Application/requirements.txt
+    ```
+
+2. Add environment variables to .bashrc
+
+    ```bash
+    export BOT_TOKEN=REPLACE
+    export FLASK_SECRET=REPLACE
+    export DB_URL=REPLACE
+    ```
+
+3. Install .NET SDK 3.1
+
+    <https://docs.microsoft.com/en-gb/dotnet/core/install/linux-package-manager-ubuntu-1910>
+
+4. Install EFcore
+
+    ```bash
+    dotnet tool install --global dotnet-ef
+    ```
+
+5. Create EFcore secret
+
+    ```bash
+    touch ./Database/secret.txt
+    echo "REPLACE" > ./Database/secret.txt
+    ```
+
+6. Database migrations
+
+    ```bash
+    cd Database/EFCoreSample
+    dotnet ef migrations add InitialCreate
+    dotnet ef database update
+    cd ../..
+    ```
+
+7. Create master user
+
+    ```bash
+    touch ./Database/Identity/master.txt
+    echo "EMAIL\r\nNAME\r\nPASSWORD" > ./Database/Identity/master.txt
+    ```
+
+8. Identity migrations
+
+    ```bash
+    cd Database/Identity
+    dotnet ef migrations add InitialCreate
+    dotnet ef database update
+    cd ../..
+    ```
+
+## Run (use tmux)
+
+Database
+
+```bash
+tmux
+cd Database/EFCoreSample
+dotnet run
+```
+
+Identity
+
+```bash
+tmux
+cd Database/Identity
+dotnet run
+```
+
+Telegram Bot
+
+```bash
+tmux
+python3 Application/bot.py
+```
+
+Webpage
+
+```bash
+tmux
+python3 Application/web.py
+```

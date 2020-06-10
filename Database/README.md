@@ -158,3 +158,79 @@ Command Response:
     "repeat": 0
 }
 ```
+
+## API Endpoints
+
+| HTTP Method    |     | Endpoint                           |
+| -------------- | --- | ---------------------------------- |
+| POST/GET       |     | /Sensor                            |
+| PUT/DELETE/GET |     | /Sensor/{id}                       |
+| GET            |     | /Sensor/latest/{num}               |
+| GET            |     | /Sensor/range/{start}/{end}        |
+| GET            |     | /Sensor/{id}/latest/{num}          |
+| GET            |     | /Sensor/{id}/range/{start}/{end}   |
+| GET            |     | /Reading                           |
+| POST           |     | /Reading/{sensorId}                |
+| PUT/DELETE/GET |     | /Reading/{id}                      |
+| POST           |     | /Reading/serial/start/{com}        |
+| GET            |     | /Reading/serial/stop               |
+| POST/GET       |     | /Actuator                          |
+| PUT/DELETE/GET |     | /Actuator/{id}                     |
+| GET            |     | /Actuator/active                   |
+| GET            |     | /Actuator/latest/{num}             |
+| GET            |     | /Actuator/range/{start}/{end}      |
+| GET            |     | /Actuator/{id}/active              |
+| GET            |     | /Actuator/{id}/latest/{num}        |
+| GET            |     | /Actuator/{id}/range/{start}/{end} |
+| GET            |     | /Command                           |
+| POST           |     | /Command/{actuatorId}              |
+| DELETE/GET     |     | /Command/{id}                      |
+| PUT            |     | /Command/{actuatorId}/{id}         |
+
+## References
+
+### Serial Comms
+
+<https://www.instructables.com/id/Serial-Port-Programming-With-NET/>
+<https://stackoverflow.com/questions/1243070/how-to-read-and-write-from-the-serial-port>
+
+### Entity Framework Core
+
+<https://docs.microsoft.com/en-us/ef/core/>
+<https://www.notion.so/The-Humble-Programmer-4fb5828ed2274c7888b20d98de6c8706>
+
+### Filtering
+
+<https://stackoverflow.com/questions/15378136/entity-framework-ordering-includes>
+
+### Background services (Not used as it starts on startup)
+
+<https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio>
+
+### Fire and forget
+
+<https://docs.microsoft.com/en-us/aspnet/core/performance/performance-best-practices?view=aspnetcore-3.1>
+
+```C#
+[HttpGet("/fire-and-forget-3")]
+public IActionResult GoodFireAndForget()
+{
+    string path = HttpContext.Request.Path;
+    _ = Task.Run(async () =>
+    {
+        await Task.Delay(1000);
+
+        Log(path);
+    });
+
+    return Accepted();
+}
+```
+
+<https://stackoverflow.com/questions/51572637/access-dbcontext-service-from-background-task>
+
+### Concurrent Dictionary for CancellationTokenSource
+
+<https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2?view=netcore-3.1>
+<https://stackoverflow.com/questions/54713001/how-to-cancel-one-particular-task-out-of-n-number-of-tasks>
+<https://stackoverflow.com/questions/55800600/persistent-in-memory-concurrent-dictionary-in-asp-net-core>

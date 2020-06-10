@@ -1,5 +1,5 @@
-using EFCoreSample.Libraries.Data;
-using EFCoreSample.Movies.Data;
+using EFCoreSample.Controls.Data;
+using EFCoreSample.Monitoring.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreSample
@@ -9,22 +9,22 @@ namespace EFCoreSample
         public AppDatabaseContext(DbContextOptions<AppDatabaseContext> options) : base(options)
         { }
 
-        public DbSet<LibraryDataModel> Libraries { get; set; }
-        public DbSet<BookDataModel> Books { get; set; }
-        public DbSet<MovieDataModel> Movies { get; set; }
-        public DbSet<RentalDataModel> Rentals { get; set; }
+        public DbSet<SensorDataModel> Sensors { get; set; }
+        public DbSet<ReadingDataModel> Readings { get; set; }
+        public DbSet<ActuatorDataModel> Actuators { get; set; }
+        public DbSet<CommandDataModel> Commands { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configures the relationship such that a LibraryDataModel has many BookDataModels, with all BookDataModels
             // requiring a LibraryDataModel
-            modelBuilder.Entity<LibraryDataModel>()
-                .HasMany(e => e.Books)
+            modelBuilder.Entity<SensorDataModel>()
+                .HasMany(sensor => sensor.Readings)
                 .WithOne()
                 .IsRequired();
                 
-            modelBuilder.Entity<RentalDataModel>()
-                .HasMany(e => e.Movies)
+            modelBuilder.Entity<ActuatorDataModel>()
+                .HasMany(actuator => actuator.Commands)
                 .WithOne()
                 .IsRequired();
         }

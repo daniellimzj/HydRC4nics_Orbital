@@ -2,6 +2,8 @@
 **/.vs/*
 **/.vscode/*
 **/*.db
+**/secret.txt
+**/master.txt
 **/Migrations/*
 **/obj/*
 **/bin/*

@@ -12,7 +12,6 @@
 import sys
 
 import requests
-import boto3
 from flask import Flask, render_template_string
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
@@ -39,22 +38,26 @@ def home():
     #####
     # s3 getting a list of photos in the bucket
     #####
+    """
     s3_client = boto3.client('s3')
     prefix = "photos/"
     response = s3_client.list_objects(
         Bucket=config.PHOTOS_BUCKET,
         Prefix=prefix
     )
-    photos = []
+    
     if 'Contents' in response and response['Contents']:
         photos = [s3_client.generate_presigned_url(
             'get_object',
             Params={'Bucket': config.PHOTOS_BUCKET, 'Key': content['Key']}
             ) for content in response['Contents']]
+            """
+    photos = []
 
 
     form = PhotoForm()
     url = None
+    """
     if form.validate_on_submit():
         image_bytes = util.resize_image(form.photo.data, (300, 300))
         if image_bytes:
@@ -72,6 +75,7 @@ def home():
             url = s3_client.generate_presigned_url(
                 'get_object',
                 Params={'Bucket': config.PHOTOS_BUCKET, 'Key': key})
+                """
 
     return render_template_string("""
             {% extends "main.html" %}

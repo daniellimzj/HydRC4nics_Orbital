@@ -1,0 +1,9 @@
+Welcome to the HyRC4nics Telegram Bot!
+
+Operators can use this bot to send commands and view data.
+
+Normal users can only view data. If you would like to request operator privileges please contact @goopod!
+
+Sending commands: Choose the actuator you want to control, then send the value you want to set that actuator to.
+
+Viewing data: Either view the most recent readings from all sensors, or up to 10 latest readings from a sensor of your choice.

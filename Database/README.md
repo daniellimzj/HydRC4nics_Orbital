@@ -30,6 +30,14 @@ One sensor has many readings. One actuator has many commands. Sensors and actuat
 - Repeat commands
 - See active commands
 
+To stop repeating commands, set `"repeat": 0`.
+
+### Identity
+
+- Register
+- Login
+- Edit claims
+
 ## JSON Formats
 
 Sensor Request:
@@ -159,33 +167,101 @@ Command Response:
 }
 ```
 
+Register Request:
+
+```json
+{
+    "email": "user@example.com",
+    "password": "string",
+    "name": "string"
+}
+```
+
+Register Response:
+
+```json
+{
+    "id": "e607a2b5-a5cd-4940-a039-49a5242213af",
+    "name": "string",
+    "email": "user@example.com",
+    "claims": [
+            {
+                "issuer": "LOCAL AUTHORITY",
+                "originalIssuer": "LOCAL AUTHORITY",
+                "properties": {},
+                "subject": null,
+                "type": "org",
+                "value": "none",
+                "valueType": "http://www.w3.org/2001/XMLSchema#string"
+            }
+        ]
+    }
+```
+
+Login Request:
+
+```json
+{
+    "email": "user@example.com",
+    "password": "string"
+}
+```
+
+Login Response:
+
+```json
+{
+    "id": "e607a2b5-a5cd-4940-a039-49a5242213af",
+    "token": "JWT",
+    "name": "string"
+}
+```
+
+Claim Request:
+
+```json
+{
+    "email": "user@example.com",
+    "type": "string",
+    "value": "string"
+}
+```
+
 ## API Endpoints
 
-| HTTP Method    |     | Endpoint                           |
-| -------------- | --- | ---------------------------------- |
-| POST/GET       |     | /Sensor                            |
-| PUT/DELETE/GET |     | /Sensor/{id}                       |
-| GET            |     | /Sensor/latest/{num}               |
-| GET            |     | /Sensor/range/{start}/{end}        |
-| GET            |     | /Sensor/{id}/latest/{num}          |
-| GET            |     | /Sensor/{id}/range/{start}/{end}   |
-| GET            |     | /Reading                           |
-| POST           |     | /Reading/{sensorId}                |
-| PUT/DELETE/GET |     | /Reading/{id}                      |
-| POST           |     | /Reading/serial/start/{com}        |
-| GET            |     | /Reading/serial/stop               |
-| POST/GET       |     | /Actuator                          |
-| PUT/DELETE/GET |     | /Actuator/{id}                     |
-| GET            |     | /Actuator/active                   |
-| GET            |     | /Actuator/latest/{num}             |
-| GET            |     | /Actuator/range/{start}/{end}      |
-| GET            |     | /Actuator/{id}/active              |
-| GET            |     | /Actuator/{id}/latest/{num}        |
-| GET            |     | /Actuator/{id}/range/{start}/{end} |
-| GET            |     | /Command                           |
-| POST           |     | /Command/{actuatorId}              |
-| DELETE/GET     |     | /Command/{id}                      |
-| PUT            |     | /Command/{actuatorId}/{id}         |
+| HTTP Method   | Claim Auth    | Endpoint
+| ------------- | -----------   | ----------
+| POST/GET      |               | /Sensor
+| PUT/DELETE/GET|               | /Sensor/{id}
+| GET           |               | /Sensor/latest/{num}
+| GET           |               | /Sensor/range/{start}/{end}
+| GET           |               | /Sensor/{id}/latest/{num}
+| GET           |               | /Sensor/{id}/range/{start}/{end}
+| GET           |               | /Reading
+| POST          |               | /Reading/{sensorId}
+| PUT/DELETE/GET|               | /Reading/{id}
+| POST          |               | /Reading/serial/start/{com}
+| GET           |               | /Reading/serial/stop
+| POST/GET      |               | /Actuator
+| PUT/DELETE/GET|               | /Actuator/{id}
+| GET           |               | /Actuator/active
+| GET           |               | /Actuator/latest/{num}
+| GET           |               | /Actuator/range/{start}/{end}
+| GET           |               | /Actuator/{id}/active
+| GET           |               | /Actuator/{id}/latest/{num}
+| GET           |               | /Actuator/{id}/range/{start}/{end}
+| GET           |               | /Command
+| POST          |               | /Command/{actuatorId}
+| DELETE/GET    |               | /Command/{id}
+| PUT           |               | /Command/{actuatorId}/{id}
+| POST          |               | /Account/register
+| POST          |               | /Account/login
+| PUT           |               | /Account/update
+| DELETE        | master        | /Account/delete/{email}
+| POST          | master        | /Account/claim/add
+| POST          | master        | /Account/claim/remove
+| GET           | nus           | /Account/users
+| GET           | nus           | /Account/users/{claimType}/{claimValue}
 
 ## References
 
@@ -234,3 +310,15 @@ public IActionResult GoodFireAndForget()
 <https://docs.microsoft.com/en-us/dotnet/api/system.collections.concurrent.concurrentdictionary-2?view=netcore-3.1>
 <https://stackoverflow.com/questions/54713001/how-to-cancel-one-particular-task-out-of-n-number-of-tasks>
 <https://stackoverflow.com/questions/55800600/persistent-in-memory-concurrent-dictionary-in-asp-net-core>
+
+### Swagger with JWT
+
+<https://stackoverflow.com/questions/43447688/setting-up-swagger-asp-net-core-using-the-authorization-headers-bearer>
+
+### Master User
+
+<https://stackoverflow.com/questions/43731437/how-to-make-a-single-admin-user-for-mvc-net-core-app>
+
+### Status code 405 to 401
+
+<https://stackoverflow.com/questions/59408865/net-core-api-returns-405method-not-allowed-when-having-authorize-attribute>

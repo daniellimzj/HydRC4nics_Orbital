@@ -83,7 +83,7 @@ Database
 
     ```bash
     touch ./Database/secret.txt
-    echo "REPLACE" > ./Database/secret.txt
+    printf "REPLACE" > ./Database/secret.txt
     ```
 
 6. Database migrations
@@ -99,7 +99,7 @@ Database
 
     ```bash
     touch ./Database/Identity/master.txt
-    echo "EMAIL\r\nNAME\r\nPASSWORD" > ./Database/Identity/master.txt
+    printf "EMAIL\r\nNAME\r\nPASSWORD" > ./Database/Identity/master.txt
     ```
 
 8. Identity migrations

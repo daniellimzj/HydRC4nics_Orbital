@@ -9,7 +9,5 @@ namespace Identity.Account.Payload
         [Required] public string Password { get; set; }
 
         [Required] public string Name { get; set; }
-
-        [Required] public string SocialSecurityNumber { get; set; }
     }
 }

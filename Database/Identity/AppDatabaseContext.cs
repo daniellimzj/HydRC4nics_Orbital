@@ -1,5 +1,5 @@
 using System;
-using Identity.Account;
+using Identity.Account.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +13,6 @@ namespace Identity
         {
         }
 
-        public DbSet<AppUser> Users { get; set; }
+        public new DbSet<AppUser> Users { get; set; }
     }
 }

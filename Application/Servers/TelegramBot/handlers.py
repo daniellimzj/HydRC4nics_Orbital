@@ -49,15 +49,15 @@ def startHandler(update, context):
     query = update.callback_query
 
     if query.data == "HELP":
-        """
-        with open("help.txt", "r") as myfile:
+        
+        with open("help.txt") as myfile:
             messageText = myfile.read()
-        """
+        
         context.bot.send_message(
-                                text = "todo",
+                                text = messaegText,
                                 chat_id = chatid,
                                 parse_mode = ParseMode.HTML,
-                                reply_markup = InlineKeyboardMarkup(mn.actuatorMenu))
+                                reply_markup = InlineKeyboardMarkup(mn.startOverMenu))
         return START
     
     if query.data == "ACTUATOR":

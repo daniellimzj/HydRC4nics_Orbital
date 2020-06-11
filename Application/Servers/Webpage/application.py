@@ -17,8 +17,8 @@ from flask import Flask, render_template_string
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 
-import config
-import util
+from .. import config
+from .. import db
 
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET

@@ -1,9 +1,0 @@
-requests<2.19
-Flask<0.13
-Flask-WTF<0.15
-Pillow<5.1
-aws-xray-sdk<0.96
-flask-login<0.5
-python_jose<2.1
-mysql_connector_python<8.1
-boto3

@@ -4,7 +4,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5020",
+      "applicationUrl": "http://0.0.0.0:5020",
       "sslPort": 44300
     }
   },
@@ -19,9 +19,9 @@
     },
     "EFCoreSample": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
-      "applicationUrl": "http://0.0.0.0:80",
+      "applicationUrl": "http://0.0.0.0:5020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

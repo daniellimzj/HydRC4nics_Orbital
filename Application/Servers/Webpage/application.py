@@ -16,7 +16,7 @@ import datetime
 from flask import Flask, render_template_string, render_template
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, DateTimeField, IntegerField
+from wtforms import StringField, DateTimeField, IntegerField, RadioField, FormField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -32,12 +32,28 @@ class PhotoForm(FlaskForm):
         FileRequired()
     ])
 
-class RecentForm(FlaskForm):
-    recent = IntegerField('recent', validators=[DataRequired()])
 
 class StartEndForm(FlaskForm):
-    start = DateTimeField('start',  validators=[DataRequired()], format = '%y-%m-%d %H:%M')
-    end = DateTimeField('end', validators=[DataRequired()], format =  '%y-%m-%d %H:%M')
+    start = DateTimeField('start', validators = [DataRequired()], format = '%y-%m-%d %H:%M')
+    end = DateTimeField('end', validators = [DataRequired()], format =  '%y-%m-%d %H:%M')
+
+class readingsForm(FlaskForm):
+    recent = IntegerField('recent', validators = [DataRequired()])
+    startend = FormField(StartEndForm)
+
+class SensorForm(FlaskForm):
+
+    sensorsList = db.getAllSensors()
+    choices = [(None, "All Sensors")]
+    for sensor in sensorsList:
+        choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
+
+    selectSensor = RadioField(choices = choices, validators = [DataRequired()])
+    selectReadings = FormField(readingsForm)
+
+        
+
+
 
 
 @application.route("/", methods=('GET', 'POST'))
@@ -150,40 +166,36 @@ def info():
 
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
-
+    print("hello")
     numRecent = 0
     start = None
     end = None
 
-    recentForm = RecentForm()
-    startEndForm = StartEndForm()
+    sensorForm = SensorForm()
 
-    sensorsList = db.getAllSensors()
     readingsList = []
 
-    if recentForm.validate_on_submit():
-        print("hello")
-        numRecent = int(recentForm.recent.data)
+    if sensorForm.validate_on_submit():
+
+        print(sensorForm.selectSensor.data)
+        sensorId = sensorForm.selectSensor.data
+        numRecent = int(sensorForm.selectReadings.recent.data)
+        start = sensorForm.selectReadings.startend.start.data
+        end = sensorForm.selectReadings.startend.end.data
+
         if numRecent > 0:
-            readingsList = db.getReadings(latest = numRecent)
+            readingsList = db.getReadings(sensorId = sensorId, latest = numRecent)
+        
+        elif (start and end):
+            readingsList = db.getReadings(sensorId = sensorId, start = start, end = end)
+
         else:
             readingsList = []
-
-
-    elif startEndForm.validate_on_submit():
-        print("working")
-        start = startEndForm.start.data
-        end = startEndForm.end.data
-        print(start)
-        print(end)
-        readingsList = db.getReadings(start = start, end = end)
 
     else:
         readingsList = []
 
-
-    return render_template("get-data.html", sensorsList = sensorsList, recentForm = recentForm,
-                           startEndForm = startEndForm, readingsList = readingsList)
+    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm)
 
 
 @application.route("/send-commands")

@@ -4,32 +4,22 @@
 
 
 
-<p> Here is where you get data</p>
+<p> Get Data from Sensors</p>
 
 <div>
     <form method="POST" action="{{ url_for('getData') }}">
-        {{ recentForm.csrf_token }}
+        {{ sensorForm.csrf_token }}
           <div class="control-group">
-           <label class="control-label">Get Recent Readings: </label>
-            {{ recentForm.recent(size = 20, placeholder = "Number of recent readings") }}
-          </div>
+           <label class="control-label">Choose a Sensor: </label>
+            {{ sensorForm.selectSensor(size = 20) }}
+            <label class="control-label">Number of recent readings to view: </label>
+            {{ sensorForm.selectReadings.recent(size = 20, placeholder = "Number of recent readings") }}
 
-           <div class="control-group">
-            <div class="controls">
-                <input class="btn btn-primary" type="submit" value="View">
-            </div>
-          </div>
-    </form>
-</div>
-
-<div>
-    <form method="POST" action="{{ url_for('getData') }}">
-        {{ startEndForm.csrf_token }}
-          <div class="control-group">
-           <label class="control-label">Get a Range of Readings: </label>
-            {{ startEndForm.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+            <p></p>
+            <label class="control-label">Or choose a range to view from: </label>
+            {{ sensorForm.selectReadings.startend.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
             to
-            {{ startEndForm.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+            {{ sensorForm.selectReadings.startend.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
           </div>
 
            <div class="control-group">
@@ -42,27 +32,19 @@
 
 <div>
 
-<ul>
-    {% for sensor in readingsList %}
-    <li>
-        {{ sensor['type']  }} {{ sensor['position'] }}
-        <ul>
-            {% for reading in sensor['readings'] %}
-                <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
-            {% endfor %}
-        </ul>
-    </li>
-    {% endfor %}
-</ul>
-
-</div>
-
-<div>
-        <ul>
-        {% for sensor in sensorsList %}
-            <li>{{ sensor['type']  }} {{ sensor['position'] }}</li>
+    <ul>
+        {% for sensor in readingsList %}
+        <li>
+            {{ sensor['type']  }} {{ sensor['position'] }}
+            <ul>
+                {% for reading in sensor['readings'] %}
+                    <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
+                {% endfor %}
+            </ul>
+        </li>
         {% endfor %}
-        </ul>
+    </ul>
+    
 </div>
 
 {% endblock %}

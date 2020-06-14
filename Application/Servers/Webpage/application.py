@@ -10,12 +10,13 @@
 # specific language governing permissions and limitations under the License.
 "Demo Flask application"
 import sys
-
 import requests
+import datetime
+
 from flask import Flask, render_template_string, render_template
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, DateTimeField
+from wtforms import StringField, DateTimeField, IntegerField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -32,11 +33,11 @@ class PhotoForm(FlaskForm):
     ])
 
 class RecentForm(FlaskForm):
-    recent = StringField('recent', validators=[DataRequired()])
+    recent = IntegerField('recent', validators=[DataRequired()])
 
 class StartEndForm(FlaskForm):
-    start = StringField('start',  validators=[DataRequired()])
-    end = StringField('end', validators=[DataRequired()])
+    start = DateTimeField('start',  validators=[DataRequired()], format = '%y-%m-%d %H:%M')
+    end = DateTimeField('end', validators=[DataRequired()], format =  '%y-%m-%d %H:%M')
 
 
 @application.route("/", methods=('GET', 'POST'))
@@ -151,8 +152,8 @@ def info():
 def getData():
 
     numRecent = 0
-    numStart = 0
-    numEnd = 0
+    start = None
+    end = None
 
     recentForm = RecentForm()
     startEndForm = StartEndForm()
@@ -161,27 +162,25 @@ def getData():
     readingsList = []
 
     if recentForm.validate_on_submit():
-
+        print("hello")
         numRecent = int(recentForm.recent.data)
-
         if numRecent > 0:
             readingsList = db.getReadings(latest = numRecent)
-
         else:
             readingsList = []
 
-"""
+
     elif startEndForm.validate_on_submit():
+        print("working")
+        start = startEndForm.start.data
+        end = startEndForm.end.data
+        print(start)
+        print(end)
+        readingsList = db.getReadings(start = start, end = end)
 
-        numStart = int(startEndForm.start.data)
-        numEnd = int(startEndForm.end.data)
+    else:
+        readingsList = []
 
-        if (numStart > 0 and numEnd > 0):
-            readingsList = db.getReadings(start = numStart, end = numEnd)
-
-        else:
-            readingsList = []
-"""
 
     return render_template("get-data.html", sensorsList = sensorsList, recentForm = recentForm,
                            startEndForm = startEndForm, readingsList = readingsList)

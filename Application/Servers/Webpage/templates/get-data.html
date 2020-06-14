@@ -11,7 +11,7 @@
         {{ recentForm.csrf_token }}
           <div class="control-group">
            <label class="control-label">Get Recent Readings: </label>
-            {{recentForm.recent(size = 20)}}
+            {{ recentForm.recent(size = 20, placeholder = "Number of recent readings") }}
           </div>
 
            <div class="control-group">
@@ -27,9 +27,9 @@
         {{ startEndForm.csrf_token }}
           <div class="control-group">
            <label class="control-label">Get a Range of Readings: </label>
-            {{startEndForm.start(size = 20)}}
+            {{ startEndForm.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
             to
-            {{startEndForm.end(size = 20)}}
+            {{ startEndForm.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
           </div>
 
            <div class="control-group">

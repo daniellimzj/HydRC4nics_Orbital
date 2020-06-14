@@ -12,9 +12,11 @@
 import sys
 
 import requests
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, render_template
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
+from wtforms import StringField, DateTimeField
+from wtforms.validators import DataRequired
 
 from .. import config
 from .. import db
@@ -28,6 +30,13 @@ class PhotoForm(FlaskForm):
     photo = FileField('image', validators=[
         FileRequired()
     ])
+
+class RecentForm(FlaskForm):
+    recent = StringField('recent', validators=[DataRequired()])
+
+class StartEndForm(FlaskForm):
+    start = StringField('start',  validators=[DataRequired()])
+    end = StringField('end', validators=[DataRequired()])
 
 
 @application.route("/", methods=('GET', 'POST'))
@@ -137,6 +146,55 @@ def info():
                                   availability_zone=availability_zone,
                                   sys_version=sys.version)
 
+
+@application.route("/get-data", methods = ("GET", "POST"))
+def getData():
+
+    numRecent = 0
+    numStart = 0
+    numEnd = 0
+
+    recentForm = RecentForm()
+    startEndForm = StartEndForm()
+
+    sensorsList = db.getAllSensors()
+    readingsList = []
+
+    if recentForm.validate_on_submit():
+
+        numRecent = int(recentForm.recent.data)
+
+        if numRecent > 0:
+            readingsList = db.getReadings(latest = numRecent)
+
+        else:
+            readingsList = []
+
+"""
+    elif startEndForm.validate_on_submit():
+
+        numStart = int(startEndForm.start.data)
+        numEnd = int(startEndForm.end.data)
+
+        if (numStart > 0 and numEnd > 0):
+            readingsList = db.getReadings(start = numStart, end = numEnd)
+
+        else:
+            readingsList = []
+"""
+
+    return render_template("get-data.html", sensorsList = sensorsList, recentForm = recentForm,
+                           startEndForm = startEndForm, readingsList = readingsList)
+
+
+@application.route("/send-commands")
+def sendCommands():
+    actuatorsList = db.getAllActuators()
+    return render_template("send-commands.html")
+
+@application.route("/view-commands")
+def viewCommands():
+    return render_template("view-commands.html")
 
 if __name__ == "__main__":
     # http://flask.pocoo.org/docs/0.12/errorhandling/#working-with-debuggers

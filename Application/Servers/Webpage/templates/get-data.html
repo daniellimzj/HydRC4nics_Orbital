@@ -1,0 +1,68 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+
+
+<p> Here is where you get data</p>
+
+<div>
+    <form method="POST" action="{{ url_for('getData') }}">
+        {{ recentForm.csrf_token }}
+          <div class="control-group">
+           <label class="control-label">Get Recent Readings: </label>
+            {{recentForm.recent(size = 20)}}
+          </div>
+
+           <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="View">
+            </div>
+          </div>
+    </form>
+</div>
+
+<div>
+    <form method="POST" action="{{ url_for('getData') }}">
+        {{ startEndForm.csrf_token }}
+          <div class="control-group">
+           <label class="control-label">Get a Range of Readings: </label>
+            {{startEndForm.start(size = 20)}}
+            to
+            {{startEndForm.end(size = 20)}}
+          </div>
+
+           <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="View">
+            </div>
+          </div>
+    </form>
+</div>
+
+<div>
+
+<ul>
+    {% for sensor in readingsList %}
+    <li>
+        {{ sensor['type']  }} {{ sensor['position'] }}
+        <ul>
+            {% for reading in sensor['readings'] %}
+                <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+
+</div>
+
+<div>
+        <ul>
+        {% for sensor in sensorsList %}
+            <li>{{ sensor['type']  }} {{ sensor['position'] }}</li>
+        {% endfor %}
+        </ul>
+</div>
+
+{% endblock %}

@@ -32,24 +32,34 @@ class PhotoForm(FlaskForm):
         FileRequired()
     ])
 
-
-class StartEndForm(FlaskForm):
-    start = DateTimeField('start', validators = [DataRequired()], format = '%y-%m-%d %H:%M')
-    end = DateTimeField('end', validators = [DataRequired()], format =  '%y-%m-%d %H:%M')
-
 class readingsForm(FlaskForm):
-    recent = IntegerField('recent', validators = [DataRequired()])
-    startend = FormField(StartEndForm)
+    recent = IntegerField('recent')
+    start = DateTimeField('start', format = '%y-%m-%d %H:%M')
+    end = DateTimeField('end', format =  '%y-%m-%d %H:%M')
+
+    def validate(self):
+        if (self.recent or (self.start and self.end)):
+            return True
+        else:
+            return False
 
 class SensorForm(FlaskForm):
 
     sensorsList = db.getAllSensors()
-    choices = [(None, "All Sensors")]
+    choices = [(0, "All Sensors")]
     for sensor in sensorsList:
         choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
 
-    selectSensor = RadioField(choices = choices, validators = [DataRequired()])
+    selectSensor = RadioField(choices = choices)
     selectReadings = FormField(readingsForm)
+
+    def validate(self):
+        if self.selectSensor and self.selectReadings:
+            return True
+        else:
+            return False
+
+
 
         
 
@@ -166,10 +176,10 @@ def info():
 
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
-    print("hello")
     numRecent = 0
     start = None
     end = None
+    sensorFlag = False
 
     sensorForm = SensorForm()
 
@@ -177,25 +187,36 @@ def getData():
 
     if sensorForm.validate_on_submit():
 
-        print(sensorForm.selectSensor.data)
-        sensorId = sensorForm.selectSensor.data
-        numRecent = int(sensorForm.selectReadings.recent.data)
-        start = sensorForm.selectReadings.startend.start.data
-        end = sensorForm.selectReadings.startend.end.data
+        if sensorForm.selectSensor.data == "0":
+            sensorId = None
+            sensorFlag = False
+
+        else:
+            sensorId = sensorForm.selectSensor.data
+            sensorFlag = True
+
+
+        numRecent = sensorForm.selectReadings.recent.data if sensorForm.selectReadings.recent.data else 0
+        start = sensorForm.selectReadings.start.data if sensorForm.selectReadings.start.data else None
+        end = sensorForm.selectReadings.end.data if sensorForm.selectReadings.end.data else None
 
         if numRecent > 0:
-            readingsList = db.getReadings(sensorId = sensorId, latest = numRecent)
+            readingsList = db.getReadings(sensorId = sensorId, latest = int(numRecent))
+            print(readingsList)
         
         elif (start and end):
             readingsList = db.getReadings(sensorId = sensorId, start = start, end = end)
+            print(readingsList)
 
         else:
+            pront("validating but sth wrong")
             readingsList = []
 
     else:
+        print("not validating")
         readingsList = []
 
-    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm)
+    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag)
 
 
 @application.route("/send-commands")

@@ -17,9 +17,9 @@
 
             <p></p>
             <label class="control-label">Or choose a range to view from: </label>
-            {{ sensorForm.selectReadings.startend.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+            {{ sensorForm.selectReadings.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
             to
-            {{ sensorForm.selectReadings.startend.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+            {{ sensorForm.selectReadings.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
           </div>
 
            <div class="control-group">
@@ -31,6 +31,20 @@
 </div>
 
 <div>
+{% if sensorFlag %}
+
+    <ul>
+        <li>
+            {{ readingsList['type']  }} {{ readingsList['position'] }}
+            <ul>
+                {% for reading in readingsList['readings'] %}
+                    <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+
+{% else %}
 
     <ul>
         {% for sensor in readingsList %}
@@ -44,7 +58,9 @@
         </li>
         {% endfor %}
     </ul>
-    
+
+{% endif %}
+
 </div>
 
 {% endblock %}

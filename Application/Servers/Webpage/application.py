@@ -22,48 +22,10 @@ from wtforms.validators import DataRequired
 from .. import config
 from .. import db
 
+from . import forms as f
+
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
-
-### FlaskForm set up
-class PhotoForm(FlaskForm):
-    """flask_wtf form class the file upload"""
-    photo = FileField('image', validators=[
-        FileRequired()
-    ])
-
-class readingsForm(FlaskForm):
-    recent = IntegerField('recent')
-    start = DateTimeField('start', format = '%y-%m-%d %H:%M')
-    end = DateTimeField('end', format =  '%y-%m-%d %H:%M')
-
-    def validate(self):
-        if (self.recent or (self.start and self.end)):
-            return True
-        else:
-            return False
-
-class SensorForm(FlaskForm):
-
-    sensorsList = db.getAllSensors()
-    choices = [(0, "All Sensors")]
-    for sensor in sensorsList:
-        choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
-
-    selectSensor = RadioField(choices = choices)
-    selectReadings = FormField(readingsForm)
-
-    def validate(self):
-        if self.selectSensor and self.selectReadings:
-            return True
-        else:
-            return False
-
-
-
-        
-
-
 
 
 @application.route("/", methods=('GET', 'POST'))
@@ -91,7 +53,7 @@ def home():
     photos = []
 
 
-    form = PhotoForm()
+    form = f.PhotoForm()
     url = None
     """
     if form.validate_on_submit():
@@ -153,27 +115,6 @@ def home():
                 """, form=form, url=url, photos=photos, all_labels=all_labels)
 
 
-@application.route("/info")
-def info():
-    "Webserver info route"
-    metadata = "http://169.254.169.254"
-    instance_id = requests.get(metadata +
-                               "/latest/meta-data/instance-id").text
-    availability_zone = requests.get(metadata +
-                                     "/latest/meta-data/placement/availability-zone").text
-
-    return render_template_string("""
-            {% extends "main.html" %}
-            {% block content %}
-            <b>instance_id</b>: {{instance_id}} <br/>
-            <b>availability_zone</b>: {{availability_zone}} <br/>
-            <b>sys.version</b>: {{sys_version}} <br/>
-            {% endblock %}""",
-                                  instance_id=instance_id,
-                                  availability_zone=availability_zone,
-                                  sys_version=sys.version)
-
-
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
     numRecent = 0
@@ -181,7 +122,7 @@ def getData():
     end = None
     sensorFlag = False
 
-    sensorForm = SensorForm()
+    sensorForm = f.SensorForm()
 
     readingsList = []
 
@@ -209,24 +150,66 @@ def getData():
             print(readingsList)
 
         else:
-            pront("validating but sth wrong")
             readingsList = []
 
     else:
-        print("not validating")
         readingsList = []
 
     return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag)
 
 
+@application.route("/view-commands", methods = ("GET", "POST"))
+def viewCommands():
+
+    numRecent = 0
+    start = None
+    end = None
+    commandsFlag = False
+
+    commandsForm = f.CommandsForm()
+
+    commandsList = []
+
+    if commandsForm.validate_on_submit():
+
+        if commandsForm.selectActuator.data == "0":
+            actuatorId = None
+            actuatorFlag = False
+
+        else:
+            actuatorId = sensorForm.selectActuator.data
+            actuatorFlag = True
+
+
+        numRecent = commandsForm.selectCommands.recent.data if commandsForm.selectCommands.recent.data else 0
+        start = commandsForm.selectCommands.start.data if commandsForm.selectCommands.start.data else None
+        end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
+
+        if numRecent > 0:
+            commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent))
+            print(commandsList)
+        
+        elif (start and end):
+            commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end)
+            print(commandsList)
+
+        else:
+            commandsList = []
+
+    else:
+        commandsList = []
+
+    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag)
+
+    
+
+    return render_template("view-commands.html")
+
+
 @application.route("/send-commands")
 def sendCommands():
-    actuatorsList = db.getAllActuators()
     return render_template("send-commands.html")
 
-@application.route("/view-commands")
-def viewCommands():
-    return render_template("view-commands.html")
 
 if __name__ == "__main__":
     # http://flask.pocoo.org/docs/0.12/errorhandling/#working-with-debuggers

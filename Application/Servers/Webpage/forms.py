@@ -5,9 +5,13 @@ import requests
 import datetime
 
 from flask import Flask, render_template_string, render_template
+
+from flask_bootstrap import Bootstrap
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, DateTimeField, IntegerField, RadioField, FormField
+
+from wtforms import StringField, IntegerField, RadioField, FormField, DateTimeField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -22,14 +26,12 @@ class PhotoForm(FlaskForm):
 # reusable form
 class RangeForm(FlaskForm):
     recent = IntegerField('recent')
-    start = DateTimeField('start', format = '%y-%m-%d %H:%M')
+    start = DateTimeField('start', id = 'datepick')
     end = DateTimeField('end', format =  '%y-%m-%d %H:%M')
 
     def validate(self):
-        if (self.recent or (self.start and self.end)):
-            return True
-        else:
-            return False
+        return (self.recent or (self.start and self.end))
+
 
 # to get data
 class SensorForm(FlaskForm):
@@ -43,10 +45,7 @@ class SensorForm(FlaskForm):
     selectReadings = FormField(RangeForm)
 
     def validate(self):
-        if self.selectSensor and self.selectReadings:
-            return True
-        else:
-            return False
+        return (self.selectSensor and self.selectReadings)
 
 # to view commands
 class CommandsForm(FlaskForm):
@@ -57,10 +56,8 @@ class CommandsForm(FlaskForm):
         choices.append((actuator['id'], f"{actuator['type']} {actuator['position']}"))
     
     selectActuator = RadioField(choices = choices)
+    selectCommandsType = RadioField(choices = [(0, "All Commands"), (1, "Only Active Commands")])
     selectCommands = FormField(RangeForm)
 
     def validate(self):
-        if self.selectActuator and self.selectCommands:
-            return True
-        else:
-            return False
+        return (self.selectActuator and self.selectCommandsType and self.selectCommands)

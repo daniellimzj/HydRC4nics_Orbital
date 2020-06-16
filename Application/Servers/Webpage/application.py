@@ -14,9 +14,13 @@ import requests
 import datetime
 
 from flask import Flask, render_template_string, render_template
+
+from flask_bootstrap import Bootstrap
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, DateTimeField, IntegerField, RadioField, FormField
+
+from wtforms import StringField, IntegerField, RadioField, FormField, DateTimeField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -26,6 +30,7 @@ from . import forms as f
 
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
+Bootstrap(application)
 
 
 @application.route("/", methods=('GET', 'POST'))
@@ -164,6 +169,7 @@ def viewCommands():
     numRecent = 0
     start = None
     end = None
+    activeFlag = False
     commandsFlag = False
 
     commandsForm = f.CommandsForm()
@@ -180,17 +186,18 @@ def viewCommands():
             actuatorId = sensorForm.selectActuator.data
             actuatorFlag = True
 
-
+        activeFlag = True if commandsForm.selectCommandsType.data =='1' else False
+        
         numRecent = commandsForm.selectCommands.recent.data if commandsForm.selectCommands.recent.data else 0
         start = commandsForm.selectCommands.start.data if commandsForm.selectCommands.start.data else None
         end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
 
         if numRecent > 0:
-            commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent))
+            commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), active = activeFlag)
             print(commandsList)
         
         elif (start and end):
-            commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end)
+            commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end, active = activeFlag)
             print(commandsList)
 
         else:

@@ -4,22 +4,29 @@
 
 
 
-<p> View Commands to Actuators</p>
+<p> View Commands Sent to Actuators</p>
 
 <div>
     <form method="POST" action="{{ url_for('viewCommands') }}">
         {{ commandsForm.csrf_token }}
           <div class="control-group">
-           <label class="control-label">Choose a Actuator: </label>
+
+           <label class="control-label">Choose an Actuator: </label>
             {{ commandsForm.selectActuator(size = 20) }}
+            
+            <label class="control-label">Choose a type of command: </label>
+            {{ commandsForm.selectCommandsType(size = 20) }}
+
             <label class="control-label">Number of recent commands to view: </label>
             {{ commandsForm.selectCommands.recent(size = 20, placeholder = "Number of recent commands") }}
 
             <p></p>
+            
             <label class="control-label">Or choose a range to view from: </label>
             {{ commandsForm.selectCommands.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
             to
             {{ commandsForm.selectCommands.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+
           </div>
 
            <div class="control-group">

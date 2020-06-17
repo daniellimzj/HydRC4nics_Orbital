@@ -28,6 +28,9 @@ from .. import db
 
 from . import forms as f
 
+import dash
+from . import dashboard
+
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
 Bootstrap(application)
@@ -215,7 +218,23 @@ def viewCommands():
 
 @application.route("/send-commands")
 def sendCommands():
-    return render_template("send-commands.html")
+    return render_template("send-commands.html")  
+
+app = dash.Dash(
+        __name__,
+        server=application,
+        routes_pathname_prefix='/dash/'
+    )
+
+dashboard.startDashboard(app)
+
+@application.route("/readings")
+def readingsPage():
+    return render_template_string("""
+            {% extends "main.html" %}
+            {% block content %}
+            <iframe src="http://localhost:8080/dash" width=800 height=600>
+            {% endblock %}""")
 
 
 if __name__ == "__main__":

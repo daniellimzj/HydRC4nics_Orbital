@@ -1,3 +1,7 @@
-requests<2.23
-Flask<1.1.2
-python-telegram-bot<12.7
+requests==2.23
+Flask==1.1.2
+Flask-WTF==0.14.13
+python-telegram-bot==12.7
+pandas==1.0.4
+plotly==4.8.1
+dash==1.12.0

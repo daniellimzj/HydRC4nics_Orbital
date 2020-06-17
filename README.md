@@ -45,6 +45,7 @@ Webpage
 - Flask
 - HTML, CSS, Javascript
 - Bootstrap
+- Dash
 
 Database
 
@@ -67,6 +68,7 @@ Database
     export BOT_TOKEN=REPLACE
     export FLASK_SECRET=REPLACE
     export DB_URL=REPLACE
+    export JWT_SECRET=REPLACE
     ```
 
 3. Install .NET SDK 3.1
@@ -99,7 +101,7 @@ Database
 
     ```bash
     touch ./Database/Identity/master.txt
-    printf "EMAIL\r\nNAME\r\nPASSWORD" > ./Database/Identity/master.txt
+    printf "EMAIL/NAME/PASSWORD" > ./Database/Identity/master.txt
     ```
 
 8. Identity migrations

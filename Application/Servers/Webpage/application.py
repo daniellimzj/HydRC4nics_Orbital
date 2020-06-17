@@ -1,14 +1,3 @@
-# Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except
-# in compliance with the License. A copy of the License is located at
-#
-# https://aws.amazon.com/apache-2-0/
-#
-# or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations under the License.
-"Demo Flask application"
 import sys
 import requests
 import datetime
@@ -17,15 +6,9 @@ from flask import Flask, render_template_string, render_template
 
 from flask_bootstrap import Bootstrap
 
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
 
-from wtforms import StringField, IntegerField, RadioField, FormField
-from wtforms.fields.html5 import DateTimeField
-from wtforms.validators import DataRequired
-
-from .. import config
 from .. import db
+from .. import config
 
 from . import forms as f
 
@@ -36,10 +19,9 @@ application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
 Bootstrap(application)
 
-
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    return render_template("main.html")
+    return render_template('main.html')
 
 
 @application.route("/get-data", methods = ("GET", "POST"))
@@ -62,7 +44,6 @@ def getData():
         else:
             sensorId = sensorForm.selectSensor.data
             sensorFlag = True
-
 
         numRecent = sensorForm.selectReadings.recent.data if sensorForm.selectReadings.recent.data else 0
         start = sensorForm.selectReadings.start.data if sensorForm.selectReadings.start.data else None
@@ -89,6 +70,7 @@ def viewCommands():
     numRecent = 0
     start = None
     end = None
+
     activeFlag = False
     commandsFlag = False
 
@@ -161,3 +143,5 @@ if __name__ == "__main__":
     use_c9_debugger = False
     application.run(use_debugger=not use_c9_debugger, debug=True,
                     use_reloader=not use_c9_debugger, host='0.0.0.0', port=8080)
+
+

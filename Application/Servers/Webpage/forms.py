@@ -12,26 +12,21 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 
 from wtforms import StringField, IntegerField, RadioField, FormField
-from wtforms.fields.html5 import DateTimeField
+from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired
 
 from .. import config
 from .. import db
 
-class PhotoForm(FlaskForm):
-    """flask_wtf form class the file upload"""
-    photo = FileField('image', validators=[
-        FileRequired()
-    ])
 
 # reusable form
 class RangeForm(FlaskForm):
     recent = IntegerField('Recent')
-    start = DateTimeField('Start', format = '%y-%m-%d %H:%M')
-    end = DateTimeField('End', format = '%y-%m-%d %H:%M')
+    start = DateTimeLocalField('Start', format = '%Y-%m-%dT%H:%M')
+    end = DateTimeLocalField('End', format = '%Y-%m-%dT%H:%M')
 
     def validate(self):
-        return (self.recent or (self.start and self.end))
+        return (self.recent or (self.startDay and self.startTime and self.endDay and self.endTime))
 
 
 # to get data

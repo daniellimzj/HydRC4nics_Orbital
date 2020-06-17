@@ -9,12 +9,18 @@
           <div class="control-group">
            <label class="control-label">Choose an Actuator: </label>
             {{ commandForm.selectActuator(size = 20) }}
+            <label class="control-label">Value: </label>
             {{ commandForm.value(size = 20) }}
+            <label class="control-label">Units: </label>
             {{ commandForm.units(size = 20) }}
+            <label class="control-label">Your Name: </label>
             {{ commandForm.issuer(size = 20) }}
+            <label class="control-label">Purpose: </label>
             {{ commandForm.purpose(size = 20) }}
+            <label class="control-label">Execute Date: </label>
             {{ commandForm.executeDate(size = 20) }}
-            {{ commandForm.repeat(size = 20) }}
+            <label class="control-label">Number of Times to Repeat: </label>
+            {{ commandForm.repeat(size = 20, placeholder = "0 to stop repeat") }}
 
 
 

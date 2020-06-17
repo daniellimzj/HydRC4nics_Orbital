@@ -11,7 +11,8 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 
-from wtforms import StringField, IntegerField, RadioField, FormField, DateTimeField
+from wtforms import StringField, IntegerField, RadioField, FormField
+from wtforms.fields.html5 import DateTimeField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -25,9 +26,9 @@ class PhotoForm(FlaskForm):
 
 # reusable form
 class RangeForm(FlaskForm):
-    recent = IntegerField('recent')
-    start = DateTimeField('start', id = 'datepick')
-    end = DateTimeField('end', format =  '%y-%m-%d %H:%M')
+    recent = IntegerField('Recent')
+    start = DateTimeField('Start', format = '%y-%m-%d %H:%M')
+    end = DateTimeField('End', format = '%y-%m-%d %H:%M')
 
     def validate(self):
         return (self.recent or (self.start and self.end))
@@ -61,3 +62,10 @@ class CommandsForm(FlaskForm):
 
     def validate(self):
         return (self.selectActuator and self.selectCommandsType and self.selectCommands)
+
+# to send commands
+class CommandForm(FlaskForm):
+    actuatorsList = db.getAllActuators()
+    choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
+
+    selectActuator = RadioField(choices = choices)

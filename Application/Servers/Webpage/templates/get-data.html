@@ -1,11 +1,11 @@
 {% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
 
 
 
 <p> Get Data from Sensors</p>
-
 <div>
     <form method="POST" action="{{ url_for('getData') }}">
         {{ sensorForm.csrf_token }}
@@ -17,7 +17,7 @@
 
             <p></p>
             <label class="control-label">Or choose a range to view from: </label>
-            {{ sensorForm.selectReadings.start() }}
+            {{ sensorForm.selectReadings.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
             to
             {{ sensorForm.selectReadings.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
           </div>
@@ -29,7 +29,6 @@
           </div>
     </form>
 </div>
-
 
 <div>
 {% if sensorFlag %}
@@ -64,16 +63,4 @@
 
 </div>
 
-{% endblock %}
-
-
-{% block scripts %}
-  {{ super() }}
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $('#datepick').datetimepicker();
-    });
-  </script>
 {% endblock %}

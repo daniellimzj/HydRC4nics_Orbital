@@ -2,6 +2,20 @@
 
 {% block content %}
 
-<p> Here is where you send commands</p>
+<p> Get Data from Sensors</p>
+<div>
+    <form method="POST" action="{{ url_for('sendCommands') }}">
+        {{ commandForm.csrf_token }}
+          <div class="control-group">
+           <label class="control-label">Choose an Actuator: </label>
+            {{ commandForm.selectActuator(size = 20) }}
+
+           <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="View">
+            </div>
+          </div>
+    </form>
+</div>
 
 {% endblock %}

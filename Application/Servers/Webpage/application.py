@@ -20,7 +20,8 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 
-from wtforms import StringField, IntegerField, RadioField, FormField, DateTimeField
+from wtforms import StringField, IntegerField, RadioField, FormField
+from wtforms.fields.html5 import DateTimeField
 from wtforms.validators import DataRequired
 
 from .. import config
@@ -38,89 +39,7 @@ Bootstrap(application)
 
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    """Homepage route"""
-    all_labels = ["No labels yet"]
-
-    #####
-    # s3 getting a list of photos in the bucket
-    #####
-    """
-    s3_client = boto3.client('s3')
-    prefix = "photos/"
-    response = s3_client.list_objects(
-        Bucket=config.PHOTOS_BUCKET,
-        Prefix=prefix
-    )
-    
-    if 'Contents' in response and response['Contents']:
-        photos = [s3_client.generate_presigned_url(
-            'get_object',
-            Params={'Bucket': config.PHOTOS_BUCKET, 'Key': content['Key']}
-            ) for content in response['Contents']]
-            """
-    photos = []
-
-
-    form = f.PhotoForm()
-    url = None
-    """
-    if form.validate_on_submit():
-        image_bytes = util.resize_image(form.photo.data, (300, 300))
-        if image_bytes:
-            #######
-            # s3 excercise - save the file to a bucket
-            #######
-            key = prefix + util.random_hex_bytes(8) + '.png'
-            s3_client.put_object(
-                Bucket=config.PHOTOS_BUCKET,
-                Key=key,
-                Body=image_bytes,
-                ContentType='image/png'
-            )
-            # http://boto3.readthedocs.io/en/latest/guide/s3.html#generating-presigned-urls
-            url = s3_client.generate_presigned_url(
-                'get_object',
-                Params={'Bucket': config.PHOTOS_BUCKET, 'Key': key})
-                """
-
-    return render_template_string("""
-            {% extends "main.html" %}
-            {% block content %}
-            <h4>Upload Photo</h4>
-            <form method="POST" enctype="multipart/form-data" action="{{ url_for('home') }}">
-                {{ form.csrf_token }}
-                  <div class="control-group">
-                   <label class="control-label">Photo</label>
-                    {{ form.photo() }}
-                  </div>
-
-                    &nbsp;
-                   <div class="control-group">
-                    <div class="controls">
-                        <input class="btn btn-primary" type="submit" value="Upload">
-                    </div>
-                  </div>
-            </form>
-
-            {% if url %}
-            <hr/>
-            <h3>Uploaded!</h3>
-            <img src="{{url}}" /><br/>
-            {% for label in all_labels %}
-            <span class="label label-info">{{label}}</span>
-            {% endfor %}
-            {% endif %}
-            
-            {% if photos %}
-            <hr/>
-            <h4>Photos</h4>
-            {% for photo in photos %}
-                <img width="150" src="{{photo}}" />
-            {% endfor %}
-            {% endif %}
-
-            {% endblock %}
-                """, form=form, url=url, photos=photos, all_labels=all_labels)
+    return render_template("main.html")
 
 
 @application.route("/get-data", methods = ("GET", "POST"))
@@ -151,11 +70,9 @@ def getData():
 
         if numRecent > 0:
             readingsList = db.getReadings(sensorId = sensorId, latest = int(numRecent))
-            print(readingsList)
         
         elif (start and end):
             readingsList = db.getReadings(sensorId = sensorId, start = start, end = end)
-            print(readingsList)
 
         else:
             readingsList = []
@@ -197,11 +114,9 @@ def viewCommands():
 
         if numRecent > 0:
             commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), active = activeFlag)
-            print(commandsList)
         
         elif (start and end):
             commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end, active = activeFlag)
-            print(commandsList)
 
         else:
             commandsList = []
@@ -218,7 +133,10 @@ def viewCommands():
 
 @application.route("/send-commands")
 def sendCommands():
-    return render_template("send-commands.html")  
+
+    commandForm = f.CommandForm()
+
+    return render_template("send-commands.html", commandForm = commandForm)  
 
 app = dash.Dash(
         __name__,

@@ -21,9 +21,9 @@ from .. import db
 
 # reusable form
 class RangeForm(FlaskForm):
-    recent = IntegerField('Recent')
-    start = DateTimeLocalField('Start', format = '%Y-%m-%dT%H:%M')
-    end = DateTimeLocalField('End', format = '%Y-%m-%dT%H:%M')
+    recent = IntegerField('recent')
+    start = DateTimeLocalField('start', format = '%Y-%m-%dT%H:%M')
+    end = DateTimeLocalField('end', format = '%Y-%m-%dT%H:%M')
 
     def validate(self):
         return (self.recent or (self.startDay and self.startTime and self.endDay and self.endTime))
@@ -64,3 +64,9 @@ class CommandForm(FlaskForm):
     choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
 
     selectActuator = RadioField(choices = choices)
+    value = IntegerField('value', validators = [DataRequired()])
+    units = StringField('units', validators = [DataRequired()])
+    issuer = StringField('issuer', validators = [DataRequired()])
+    purpose = StringField('purpose', validators = [DataRequired()])
+    executeDate = DateTimeLocalField('executeDate', format = '%Y-%m-%dT%H:%M')
+    repeat = IntegerField('repeat', validators = [DataRequired()])

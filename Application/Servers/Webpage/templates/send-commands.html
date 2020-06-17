@@ -2,13 +2,21 @@
 
 {% block content %}
 
-<p> Get Data from Sensors</p>
+<p> Send Commands to Actuators</p>
 <div>
     <form method="POST" action="{{ url_for('sendCommands') }}">
         {{ commandForm.csrf_token }}
           <div class="control-group">
            <label class="control-label">Choose an Actuator: </label>
             {{ commandForm.selectActuator(size = 20) }}
+            {{ commandForm.value(size = 20) }}
+            {{ commandForm.units(size = 20) }}
+            {{ commandForm.issuer(size = 20) }}
+            {{ commandForm.purpose(size = 20) }}
+            {{ commandForm.executeDate(size = 20) }}
+            {{ commandForm.repeat(size = 20) }}
+
+
 
            <div class="control-group">
             <div class="controls">

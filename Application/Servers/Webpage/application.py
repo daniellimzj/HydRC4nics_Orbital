@@ -113,10 +113,17 @@ def viewCommands():
     return render_template("view-commands.html")
 
 
-@application.route("/send-commands")
+@application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
     commandForm = f.CommandForm()
+
+    if commandForm.validate_on_submit():
+        command = db.addCommand(actuatorId = commandForm.selectActuator.data, value = commandForm.value.data,
+                             units = commandForm.units.data, issuer = commandForm.issuer.data,
+                             purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
+                             repeat = commandForm.repeat.data)
+        print(command)
 
     return render_template("send-commands.html", commandForm = commandForm)  
 

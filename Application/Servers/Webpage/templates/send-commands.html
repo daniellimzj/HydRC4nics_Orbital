@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
 
@@ -6,30 +7,25 @@
 <div>
     <form method="POST" action="{{ url_for('sendCommands') }}">
         {{ commandForm.csrf_token }}
-          <div class="control-group">
-           <label class="control-label">Choose an Actuator: </label>
-            {{ commandForm.selectActuator(size = 20) }}
-            <label class="control-label">Value: </label>
-            {{ commandForm.value(size = 20) }}
-            <label class="control-label">Units: </label>
-            {{ commandForm.units(size = 20) }}
-            <label class="control-label">Your Name: </label>
-            {{ commandForm.issuer(size = 20) }}
-            <label class="control-label">Purpose: </label>
-            {{ commandForm.purpose(size = 20) }}
-            <label class="control-label">Execute Date: </label>
-            {{ commandForm.executeDate(size = 20) }}
-            <label class="control-label">Number of Times to Repeat: </label>
-            {{ commandForm.repeat(size = 20, placeholder = "0 to stop repeat") }}
+          <div class="control-group my-auto">
+            {{ wtf.form_field(commandForm.selectActuator) }}
+            {{ wtf.form_field(commandForm.value) }}
+            {{ wtf.form_field(commandForm.units) }}
+            {{ wtf.form_field(commandForm.issuer) }}
+            {{ wtf.form_field(commandForm.purpose) }}
+            {{ wtf.form_field(commandForm.executeDate) }}
+            {{ wtf.form_field(commandForm.repeat, placeholder = "0 to stop repeat") }}
 
-
-
-           <div class="control-group">
-            <div class="controls">
-                <input class="btn btn-primary" type="submit" value="View">
-            </div>
+           <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Send">
+           </div>
           </div>
     </form>
 </div>
+
+{% if success %}
+{{ success }}
+{% endif %}
+
 
 {% endblock %}

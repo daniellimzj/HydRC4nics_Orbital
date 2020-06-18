@@ -9,3 +9,5 @@
 - <https://jinja.palletsprojects.com/en/2.11.x/templates/>
 - <https://stackoverflow.com/questions/394809/does-python-have-a-ternary-conditional-operator>
 - <https://cs50.harvard.edu/web/2018/notes/2/>
+- <https://stackoverflow.com/questions/49697545/flask-wtform-datetimefield-rendering-issue>
+- <https://stackoverflow.com/questions/52825708/wtforms-datetimelocalfield-data-is-none-after-submit>

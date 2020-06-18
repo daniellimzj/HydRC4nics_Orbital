@@ -116,6 +116,7 @@ def viewCommands():
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
+    success = None
     commandForm = f.CommandForm()
 
     if commandForm.validate_on_submit():
@@ -124,8 +125,12 @@ def sendCommands():
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
                              repeat = commandForm.repeat.data)
         print(command)
+        success = "Command Sent Successfully!"
+    
+    else:
+        success = None
 
-    return render_template("send-commands.html", commandForm = commandForm)  
+    return render_template("send-commands.html", commandForm = commandForm, success = success)  
 
 app = dash.Dash(
         __name__,

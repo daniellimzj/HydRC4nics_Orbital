@@ -10,21 +10,18 @@
     <form method="POST" action="{{ url_for('getData') }}">
         {{ sensorForm.csrf_token }}
           <div class="control-group">
-           <label class="control-label">Choose a Sensor: </label>
-            {{ sensorForm.selectSensor(size = 20) }}
-            <label class="control-label">Number of recent readings to view: </label>
-            {{ sensorForm.selectReadings.recent(size = 20, placeholder = "Number of recent readings") }}
 
-            <p></p>
-            <label class="control-label">Or choose a range to view from: </label>
-            {{ sensorForm.selectReadings.start }}
-            to
-            {{ sensorForm.selectReadings.end }}
+            {{ wtf.form_field(sensorForm.selectSensor) }}
+
+            <p>Select the readings you want to view:</p>
+            {{ wtf.form_field(sensorForm.selectReadings.recent, placeholder = "Number of recent readings") }}
+            {{ wtf.form_field(sensorForm.selectReadings.start) }}
+            {{ wtf.form_field(sensorForm.selectReadings.end) }}
           </div>
 
            <div class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="View">
+                <input class="btn btn-primary" type="submit" value="Send">
             </div>
           </div>
     </form>

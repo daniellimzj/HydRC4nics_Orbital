@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
 
@@ -11,21 +12,14 @@
         {{ commandsForm.csrf_token }}
           <div class="control-group">
 
-           <label class="control-label">Choose an Actuator: </label>
-            {{ commandsForm.selectActuator(size = 20) }}
+            {{ wtf.form_field(commandsForm.selectActuator) }}
             
-            <label class="control-label">Choose a type of command: </label>
-            {{ commandsForm.selectCommandsType(size = 20) }}
+            {{ wtf.form_field(commandsForm.selectCommandsType) }}
 
-            <label class="control-label">Number of recent commands to view: </label>
-            {{ commandsForm.selectCommands.recent(size = 25, placeholder = "Number of recent commands") }}
-
-            <p></p>
+            {{ wtf.form_field(commandsForm.selectCommands.recent, placeholder = "Number of recent commands") }}
             
-            <label class="control-label">Or choose a range to view from: </label>
-            {{ commandsForm.selectCommands.start(size = 20, placeholder = "YY-MM-DD hh:mm") }}
-            to
-            {{ commandsForm.selectCommands.end(size = 20, placeholder = "YY-MM-DD hh:mm") }}
+            {{ wtf.form_field(commandsForm.selectCommands.start) }}
+            {{ wtf.form_field(commandsForm.selectCommands.end) }}
 
           </div>
 

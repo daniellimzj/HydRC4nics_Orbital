@@ -21,7 +21,7 @@ Bootstrap(application)
 
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    return render_template('main.html')
+    return render_template('index.html')
 
 
 @application.route("/get-data", methods = ("GET", "POST"))
@@ -73,6 +73,7 @@ def viewCommands():
 
     activeFlag = False
     commandsFlag = False
+    actuatorFlag = False
 
     commandsForm = f.CommandsForm()
 
@@ -128,6 +129,28 @@ def sendCommands():
         success = None
 
     return render_template("send-commands.html", commandForm = commandForm, success = success)  
+
+
+@application.route("/add-actuators", methods = ("GET", "POST"))
+def addActuators():
+
+    addForm = f.AddForm()
+
+    if addForm.validate_on_submit():
+        actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data)
+
+    return render_template("add-actuators.html", addForm = addForm)
+
+@application.route("/add-sensors", methods = ("GET", "POST"))
+def addSensors():
+
+    addForm = f.AddForm()
+
+    if addForm.validate_on_submit():
+        actuator = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data)
+
+    return render_template("add-sensors.html", addForm = addForm)
+
 
 app = dash.Dash(
         __name__,

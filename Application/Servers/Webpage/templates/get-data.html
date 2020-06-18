@@ -21,40 +21,66 @@
 
            <div class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Send">
+                <input class="btn btn-primary" type="submit" value="View">
             </div>
           </div>
     </form>
 </div>
 
-<div>
-{% if sensorFlag %}
+<p></p>
 
-    <ul>
-        <li>
-            {{ readingsList['type']  }} {{ readingsList['position'] }}
-            <ul>
-                {% for reading in readingsList['readings'] %}
-                    <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
+<div class="container" style="width:40%">
+{% if sensorFlag %}
+    <p>{{ readingsList['type']  }} {{ readingsList['position'] }}</p>
+    <table class = "table table-bordered table-hover table-sm">
+        <thead class = "thead-dark">
+            <tr>
+                <th scope = "col">Value</th>
+                <th scope = "col">Units</th>
+                <th scope = "col">Time Stamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reading in readingsList['readings'] %}
+            <tr>
+                <td>{{ reading['value']  }}</td>
+                <td>{{ reading['units']  }}</td>
+                <td>{{ reading['timeStamp']  }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 
 {% else %}
 
-    <ul>
-        {% for sensor in readingsList %}
-        <li>
-            {{ sensor['type']  }} {{ sensor['position'] }}
-            <ul>
+    <table class = "table table-bordered table-hover table-sm">
+        <thead class = "thead-dark">
+            <tr>
+                <th scope = "col">Value</th>
+                <th scope = "col">Units</th>
+                <th scope = "col">Time Stamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sensor in readingsList %}
+                <tr>
+                    <td style = "text-align: center" colspan = 3>{{ sensor['type']  }} {{ sensor['position'] }}</td>
+                </tr>
+
+
+
                 {% for reading in sensor['readings'] %}
-                    <li>{{ reading['value']  }} {{ reading['units'] }} {{ reading['timeStamp'] }} </li>
+                    <tr>
+                        <td>{{ reading['value']  }}</td>
+                        <td>{{ reading['units']  }}</td>
+                        <td>{{ reading['timeStamp']  }}</td>
+                    </tr>
                 {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </tbody>
+
+    </table>
 
 {% endif %}
 

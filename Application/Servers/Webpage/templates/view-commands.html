@@ -34,32 +34,70 @@
 <div>
 {% if actuatorFlag %}
 
-    <ul>
-        <li>
-            {{ commandsList['type']  }} {{ commandsList['position'] }}
-            <ul>
-                {% for command in commandsList['commands'] %}
-                    <li>{{ command['value']  }} {{ command['units'] }} {{ command['executeDate'] }} </li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
+    <p>{{ commandsList['type']  }} {{ commandsList['position'] }}</p>
+    <table class = "table table-bordered table-hover table-sm">
+        <thead class = "thead-dark">
+            <tr>
+                <th scope = "col">Value</th>
+                <th scope = "col">Units</th>
+                <th scope = "col">Issuer</th>
+                <th scope = "col">Purpose</th>
+                <th scope = "col">Issue Date</th>
+                <th scope = "col">Execute Date</th>
+                <th scope = "col">Times to Repeat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for command in commandsList['commands'] %}
+            <tr>
+                <td>{{ command['value']  }}</td>
+                <td>{{ command['units']  }}</td>
+                <td>{{ command['issuer']  }}</td>
+                <td>{{ command['purpose']  }}</td>
+                <td>{{ command['issueDate']  }}</td>
+                <td>{{ command['executeDate']  }}</td>
+                <td>{{ command['repeat']  }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% else %}
 
-    <ul>
-        {% for actuator in commandsList %}
-        <li>
-            {{ actuator['type']  }} {{ actuator['position'] }}
-            <ul>
+    <table class = "table table-bordered table-hover table-sm">
+        <thead class = "thead-dark">
+            <tr>
+                <th scope = "col">Value</th>
+                <th scope = "col">Units</th>
+                <th scope = "col">Issuer</th>
+                <th scope = "col">Purpose</th>
+                <th scope = "col">Issue Date</th>
+                <th scope = "col">Execute Date</th>
+                <th scope = "col">Times to Repeat</th>
+                <th scope = "col">Link to Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for actuator in commandsList %}
+                <tr>
+                    <td class = "table-secondary" style = "text-align:center" colspan = 8>{{ actuator['type']  }} {{ actuator['position'] }}</td>
+                </tr>
+
                 {% for command in actuator['commands'] %}
-                    <li>{{ command['value']  }} {{ command['units'] }} by {{ command['issuer'] }}
-                         on {{ command['executeDate'] }} </li>
+                    <tr>
+                        <td>{{ command['value']  }}</td>
+                        <td>{{ command['units']  }}</td>
+                        <td>{{ command['issuer']  }}</td>
+                        <td>{{ command['purpose']  }}</td>
+                        <td>{{ command['issueDate']  }}</td>
+                        <td>{{ command['executeDate']  }}</td>
+                        <td>{{ command['repeat']  }}</td>
+                        <td><a href="url">Update</a></td>
+                    </tr>
                 {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endif %}
 

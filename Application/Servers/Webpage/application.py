@@ -85,7 +85,8 @@ def viewCommands():
             actuatorFlag = False
 
         else:
-            actuatorId = sensorForm.selectActuator.data
+            actuatorId = commandsForm.selectActuator.data
+            print(actuatorId)
             actuatorFlag = True
 
         activeFlag = True if commandsForm.selectCommandsType.data =='1' else False
@@ -106,11 +107,7 @@ def viewCommands():
     else:
         commandsList = []
 
-    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag)
-
-    
-
-    return render_template("view-commands.html")
+    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag, actuatorFlag = actuatorFlag)
 
 
 @application.route("/send-commands", methods = ("GET", "POST"))

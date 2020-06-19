@@ -12,7 +12,6 @@ from .. import config
 
 from . import forms as f
 
-import dash
 from . import dashboard
 
 application = Flask(__name__)
@@ -152,20 +151,16 @@ def addSensors():
     return render_template("add-sensors.html", addForm = addForm)
 
 
-app = dash.Dash(
-        __name__,
-        server=application,
-        routes_pathname_prefix='/dash/'
-    )
 
-dashboard.startDashboard(app)
+dashboard.startDashboard(application)
 
 @application.route("/readings")
 def readingsPage():
+
     return render_template_string("""
             {% extends "main.html" %}
             {% block content %}
-            <iframe src="http://localhost:8080/dash" width=800 height=600>
+            <iframe src="http://localhost:8080/dash" style="height: 100vh; width: 100%; scrolling: no; frameborder: 0">
             {% endblock %}""")
 
 

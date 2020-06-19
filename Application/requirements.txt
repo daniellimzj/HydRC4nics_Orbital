@@ -5,3 +5,4 @@ python-telegram-bot==12.7
 pandas==1.0.4
 plotly==4.8.1
 dash==1.12.0
+dash-bootstrap-components==0.10.2

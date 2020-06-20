@@ -150,6 +150,20 @@ def addSensors():
 
     return render_template("add-sensors.html", addForm = addForm)
 
+@application.route("/update-command/<string:actuatorId>/<string:commandId>", methods = ("GET", "POST"))
+def updateCommand(actuatorId, commandId):
+
+    command = db.getCommands(commandId = commandId)
+    print(command)
+    actuator = db.getCommands(actuatorId = actuatorId)
+
+    updateForm = f.UpdateCommandForm()
+
+    #if updateForm.validate_on_submit():
+
+    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator)
+    
+
 
 
 dashboard.startDashboard(application)

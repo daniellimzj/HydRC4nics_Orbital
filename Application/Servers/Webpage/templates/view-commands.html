@@ -43,6 +43,7 @@
                 <th scope = "col">Issue Date</th>
                 <th scope = "col">Execute Date</th>
                 <th scope = "col">Times to Repeat</th>
+                <th scope = "col">Link to Update</th>
             </tr>
         </thead>
         <tbody>
@@ -55,6 +56,7 @@
                 <td>{{ command['issueDate']  }}</td>
                 <td>{{ command['executeDate']  }}</td>
                 <td>{{ command['repeat']  }}</td>
+                <td><a href= "{{ 'update-command/' + commandsList['id'] + '/' + command['id'] }}">Update</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -80,7 +82,6 @@
                 <tr>
                     <td class = "table-secondary" style = "text-align:center" colspan = 8>{{ actuator['type']  }} {{ actuator['position'] }}</td>
                 </tr>
-
                 {% for command in actuator['commands'] %}
                     <tr>
                         <td>{{ command['value']  }}</td>
@@ -90,7 +91,7 @@
                         <td>{{ command['issueDate']  }}</td>
                         <td>{{ command['executeDate']  }}</td>
                         <td>{{ command['repeat']  }}</td>
-                        <td><a href="url">Update</a></td>
+                        <td><a href= "{{ 'update-command/' + actuator['id'] + '/' + command['id'] }}">Update</a></td>
                     </tr>
                 {% endfor %}
             {% endfor %}

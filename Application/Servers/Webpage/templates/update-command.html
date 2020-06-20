@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+<h3>Updating command for {{ actuator['type'] }} {{ actuator['position'] }}</h3>
+
+<div>
+    <form method="POST" action="{{ url_for('updateCommand', actuatorId = actuatorId, commandId = commandId) }}">
+        {{ updateForm.csrf_token }}
+          <div class="control-group my-auto">
+            <p>Previous value: {{ command["value"] }}</p>
+            {{ wtf.form_field(updateForm.value, placeholder = command["value"]) }}
+
+            <p>Previous purpose: {{ command["purpose"] }}</p>
+            {{ wtf.form_field(updateForm.purpose, placeholder = command["purpose"]) }}
+
+            <p>Previous execute date: {{ command["executeDate"] }}</p>
+            {{ wtf.form_field(updateForm.executeDate, placeholder = command["executeDate"]) }}
+
+            <p>Previous number of times to repeat: {{ command["repeat"] }}</p>
+            {{ wtf.form_field(updateForm.repeat, placeholder = command["repeat"]) }}
+
+           <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Update">
+           </div>
+          </div>
+    </form>
+</div>
+
+
+{% endblock %}

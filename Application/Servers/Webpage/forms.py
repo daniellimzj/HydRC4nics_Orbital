@@ -70,6 +70,13 @@ class CommandForm(FlaskForm):
     executeDate = DateTimeLocalField('Date to execute:', format = '%Y-%m-%dT%H:%M')
     repeat = IntegerField('Number of times to repeat:')
 
+# to update commands
+class UpdateCommandForm(FlaskForm):
+    value = IntegerField('New value:', validators = [DataRequired()])
+    purpose = StringField('New purpose:', validators = [DataRequired()])
+    executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M')
+    repeat = IntegerField('New number of times to repeat:')
+
 # to add an actuator or a sensor
 class AddForm(FlaskForm):
     position = StringField('Position:', validators = [DataRequired()])

@@ -12,6 +12,9 @@
             <p>Previous value: {{ command["value"] }}</p>
             {{ wtf.form_field(updateForm.value, placeholder = command["value"]) }}
 
+            <p>Previous Issuer: {{ command["issuer"] }}</p>
+            {{ wtf.form_field(updateForm.issuer, placeholder = command["issuer"]) }}
+            
             <p>Previous purpose: {{ command["purpose"] }}</p>
             {{ wtf.form_field(updateForm.purpose, placeholder = command["purpose"]) }}
 

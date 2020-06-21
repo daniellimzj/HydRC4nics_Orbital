@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+
+<p> Update an Existing Sensor</p>
+
+<div>
+    <form method="POST" action="{{ url_for('updateSensors') }}">
+        {{ updateForm.csrf_token }}
+
+          <div class="control-group">
+            {{ wtf.form_field(updateForm.selectSensor) }}
+            {{ wtf.form_field(updateForm.position) }}
+            {{ wtf.form_field(updateForm.type) }}
+          </div>
+
+           <sdiv class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Update">
+            </div>
+          </div>
+    </form>
+</div>
+
+{% endblock %}

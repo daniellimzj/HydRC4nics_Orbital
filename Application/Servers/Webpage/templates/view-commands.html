@@ -56,7 +56,13 @@
                 <td>{{ command['issueDate']  }}</td>
                 <td>{{ command['executeDate']  }}</td>
                 <td>{{ command['repeat']  }}</td>
-                <td><a href= "{{ 'update-command/' + commandsList['id'] + '/' + command['id'] }}">Update</a></td>
+
+                {% if command['completed'] %}
+                    <td> Already Executed </td>
+                {% else %}
+                    <td><a href= "{{ 'update-command/' + commandsList['id'] + ':' + command['id'] }}">Update</a></td>
+                {% endif %}
+                
             </tr>
             {% endfor %}
         </tbody>
@@ -91,7 +97,12 @@
                         <td>{{ command['issueDate']  }}</td>
                         <td>{{ command['executeDate']  }}</td>
                         <td>{{ command['repeat']  }}</td>
-                        <td><a href= "{{ 'update-command/' + actuator['id'] + '/' + command['id'] }}">Update</a></td>
+
+                        {% if command['completed'] %}
+                            <td> Already Executed </td>
+                        {% else %}
+                            <td><a href= "{{ 'update-command/' + actuator['id'] + ':' + command['id'] }}">Update</a></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             {% endfor %}

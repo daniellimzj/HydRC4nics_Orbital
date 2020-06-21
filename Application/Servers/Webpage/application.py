@@ -18,10 +18,13 @@ application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
 Bootstrap(application)
 
+############################################
+
 @application.route("/", methods=('GET', 'POST'))
 def home():
     return render_template('index.html')
 
+############################################
 
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
@@ -62,6 +65,7 @@ def getData():
 
     return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag)
 
+############################################
 
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
@@ -97,9 +101,11 @@ def viewCommands():
 
         if numRecent > 0:
             commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), active = activeFlag)
+            print(commandsList)
         
         elif (start and end):
             commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end, active = activeFlag)
+            print(commandsList)
 
         else:
             commandsList = []
@@ -109,6 +115,7 @@ def viewCommands():
 
     return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag, actuatorFlag = actuatorFlag)
 
+############################################
 
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
@@ -129,6 +136,7 @@ def sendCommands():
 
     return render_template("send-commands.html", commandForm = commandForm, success = success)  
 
+############################################
 
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
@@ -140,6 +148,8 @@ def addActuators():
 
     return render_template("add-actuators.html", addForm = addForm)
 
+############################################
+
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
@@ -150,21 +160,56 @@ def addSensors():
 
     return render_template("add-sensors.html", addForm = addForm)
 
-@application.route("/update-command/<string:actuatorId>/<string:commandId>", methods = ("GET", "POST"))
+############################################
+
+@application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
 
     command = db.getCommands(commandId = commandId)
-    print(command)
+    print(command, end = '\n\n')
     actuator = db.getCommands(actuatorId = actuatorId)
 
     updateForm = f.UpdateCommandForm()
 
-    #if updateForm.validate_on_submit():
+    if updateForm.validate_on_submit():
+        newCommand = db.updateCommand(actuatorId = actuatorId, commandId = commandId,
+                                   value = updateForm.value.data, units = command['units'],
+                                   issuer = updateForm.issuer.data, purpose = updateForm.purpose.data,
+                                   issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
+                                   repeat = updateForm.repeat.data)
+        print(newCommand)
 
     return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator)
     
+############################################
 
+@application.route("/update-actuators", methods = ("GET", "POST"))
+def updateActuators():
 
+    updateForm = f.UpdateActuatorForm()
+
+    if updateForm.validate_on_submit():
+        actuator = db.updateActuator(actuatorId = updateForm.selectActuator.data,
+                       position = updateForm.position.data,
+                       actuatorType = updateForm.type.data)
+        print(actuator)
+
+    return render_template("update-actuators.html", updateForm = updateForm)
+
+############################################
+
+@application.route("/update-sensors", methods = ("GET", "POST"))
+def updateSensors():
+
+    updateForm = f.UpdateSensorForm()
+
+    if updateForm.validate_on_submit():
+        sensor = db.updateSensor(sensorId = updateForm.selectSensor.data,
+                       position = updateForm.position.data,
+                       sensorType = updateForm.type.data)
+        print(sensor)
+
+    return render_template("update-sensors.html", updateForm = updateForm)
 
 dashboard.startDashboard(application)
 

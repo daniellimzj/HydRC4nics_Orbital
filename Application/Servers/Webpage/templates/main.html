@@ -36,8 +36,8 @@
                 Data
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="get-data">View</a>
-                <a class="dropdown-item" href="readings">Dashboard</a>
+                <a class="dropdown-item" href="{{ url_for('getData') }}">View</a>
+                <a class="dropdown-item" href="{{ url_for('readingsPage') }}">Dashboard</a>
               </div>
             </li>
             <li class="nav-item dropdown">
@@ -45,8 +45,8 @@
                 Commands
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="view-commands">View</a>
-                <a class="dropdown-item" href="send-commands">Send</a>
+                <a class="dropdown-item" href="{{ url_for('viewCommands') }}">View</a>
+                <a class="dropdown-item" href="{{ url_for('sendCommands') }}">Send</a>
               </div>
             </li>
             <li class="nav-item dropdown">
@@ -54,8 +54,17 @@
                 Add
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="add-actuators">Actuators</a>
-                <a class="dropdown-item" href="add-sensors">Sensors</a>
+                <a class="dropdown-item" href="{{ url_for('addActuators') }}">Actuators</a>
+                <a class="dropdown-item" href="{{ url_for('addSensors') }}">Sensors</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Update
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ url_for('updateActuators') }}">Actuators</a>
+                <a class="dropdown-item" href="{{ url_for('updateSensors') }}">Sensors</a>
               </div>
             </li>
           </ul>

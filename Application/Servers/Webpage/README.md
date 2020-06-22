@@ -1,15 +1,30 @@
 # Webpage
 
+## Functions
+
+The webpage gives users access to all functionalities of the system. The functionalities are listed below:
+- View data in a table format
+- View data in a graphical format
+- Send commands to the database
+- View previous commands sent to the database
+- Update previous commands that have been sent but are not executed yet.
+- Add new ensors and actuators
+- Update positions and types of existing actuators and sensors.
+
 ## References
 
+### General
 - <https://docs.python.org/3/library/datetime.html>
-- <https://wtforms.readthedocs.io/en/2.3.x/fields/#>
-- <https://stackoverflow.com/questions/21815067/how-do-i-validate-wtforms-fields-against-one-another>
 - <https://jinja.palletsprojects.com/en/2.11.x/templates/>
 - <https://stackoverflow.com/questions/394809/does-python-have-a-ternary-conditional-operator>
 - <https://cs50.harvard.edu/web/2018/notes/2/>
+
+
+### Flask & WTForms
 - <https://stackoverflow.com/questions/49697545/flask-wtform-datetimefield-rendering-issue>
 - <https://stackoverflow.com/questions/52825708/wtforms-datetimelocalfield-data-is-none-after-submit>
+- <https://wtforms.readthedocs.io/en/2.3.x/fields/#>
+- <https://stackoverflow.com/questions/21815067/how-do-i-validate-wtforms-fields-against-one-another>
 
 ### Dash
 

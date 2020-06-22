@@ -13,7 +13,7 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms import StringField, IntegerField, RadioField, FormField, SelectField
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional, ValidationError
 
 from .. import config
 from .. import db
@@ -21,32 +21,35 @@ from .. import db
 
 # reusable form
 class RangeForm(FlaskForm):
-    recent = IntegerField('Most recent:')
-    start = DateTimeLocalField('Or choose a range from:', format = '%Y-%m-%dT%H:%M')
-    end = DateTimeLocalField('To:', format = '%Y-%m-%dT%H:%M')
-
-    def validate(self):
-        return (self.recent or (self.start and self.end))
+    recent = IntegerField('Most recent:', validators = [Optional()])
+    start = DateTimeLocalField('Or choose a range from:', format = '%Y-%m-%dT%H:%M', validators = [Optional()])
+    end = DateTimeLocalField('To:', format = '%Y-%m-%dT%H:%M', validators = [Optional()])
+        
 
 
 # to get data
 class SensorForm(FlaskForm):
     sensorsList = db.getAllSensors()
-    choices = [(0, "All Sensors")]
+    choices = [(100, "All Sensors")]
     for sensor in sensorsList:
         choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
 
-    selectSensor = SelectField("Select a sensor:", choices = choices)
+    selectSensor = SelectField("Select a sensor:", choices = choices, validators = [DataRequired()])
     selectReadings = FormField(RangeForm)
 
     def validate(self):
-        return (self.selectSensor and self.selectReadings)
+        if self.selectReadings.recent.data and (self.selectReadings.start.data or self.selectReadings.end.data):
+            print("orh horh")
+            return False
+        return True
+        
+        
 
 # to view commands
 class CommandsForm(FlaskForm):
 
     actuatorsList = db.getAllActuators()
-    choices = [(0, "All Actuators")]
+    choices = [(100, "All Actuators")]
     for actuator in actuatorsList:
         choices.append((actuator['id'], f"{actuator['type']} {actuator['position']}"))
     
@@ -75,8 +78,8 @@ class UpdateCommandForm(FlaskForm):
     value = IntegerField('New value:', validators = [DataRequired()])
     issuer = StringField('New issuer:', validators = [DataRequired()])
     purpose = StringField('New purpose:', validators = [DataRequired()])
-    executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M')
-    repeat = IntegerField('New number of times to repeat:')
+    executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M', validators = [DataRequired()])
+    repeat = IntegerField('New number of times to repeat:', validators = [DataRequired()])
 
 # to add an actuator or a sensor
 class AddForm(FlaskForm):

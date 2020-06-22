@@ -39,7 +39,7 @@ def getData():
 
     if sensorForm.validate_on_submit():
 
-        if sensorForm.selectSensor.data == "0":
+        if sensorForm.selectSensor.data == "100":
             sensorId = None
             sensorFlag = False
 
@@ -84,7 +84,7 @@ def viewCommands():
 
     if commandsForm.validate_on_submit():
 
-        if commandsForm.selectActuator.data == "0":
+        if commandsForm.selectActuator.data == "100":
             actuatorId = None
             actuatorFlag = False
 

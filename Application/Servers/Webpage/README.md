@@ -2,14 +2,16 @@
 
 ## Functions
 
-The webpage gives users access to all functionalities of the system. The functionalities are listed below:
+The webpage gives users access to all functionalities of the system. The current functionalities are listed below:
 - View data in a table format
 - View data in a graphical format
 - Send commands to the database
 - View previous commands sent to the database
 - Update previous commands that have been sent but are not executed yet.
-- Add new ensors and actuators
+- Add new sensors and actuators
 - Update positions and types of existing actuators and sensors.
+
+Future updates will implement a registration and login system such that only authorised users can access certain functionalities.
 
 ## References
 

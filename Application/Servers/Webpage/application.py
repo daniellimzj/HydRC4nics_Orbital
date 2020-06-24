@@ -2,7 +2,7 @@ import sys
 import requests
 import datetime
 
-from flask import Flask, render_template_string, render_template
+from flask import Flask, render_template_string, render_template, flash
 
 from flask_bootstrap import Bootstrap
 
@@ -99,16 +99,8 @@ def viewCommands():
         start = commandsForm.selectCommands.start.data if commandsForm.selectCommands.start.data else None
         end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
 
-        if numRecent > 0:
-            commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), active = activeFlag)
-            print(commandsList)
-        
-        elif (start and end):
-            commandsList = db.getCommands(actuatorId = actuatorId, start = start, end = end, active = activeFlag)
-            print(commandsList)
-
-        else:
-            commandsList = []
+        commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), start = start, end = end, active = activeFlag)
+        print(commandsList)
 
     else:
         commandsList = []

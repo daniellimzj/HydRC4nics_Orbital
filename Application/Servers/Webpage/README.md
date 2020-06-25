@@ -2,16 +2,18 @@
 
 ## Functions
 
-The webpage gives users access to all functionalities of the system. The current functionalities are listed below:
-- View data in a table format
-- View data in a graphical format
-- Send commands to the database
-- View previous commands sent to the database
-- Update previous commands that have been sent but are not executed yet.
-- Add new sensors and actuators
-- Update positions and types of existing actuators and sensors.
+The webpage shares a common database with the Telegram Bot and provides the same functionality. The only difference will be the interface, where the webpage can make use of it’s increased flexibility to display more information and provide more options when controlling the system.
 
-Future updates will implement a registration and login system such that only authorised users can access certain functionalities.
+- Differentiate users based on a login system
+- Commands made available to operators only through their login credentials
+- Data viewing made available to all users
+- Creation of different routes for sending commands and retrieving data
+- Convert commands sent to the webpage to HTTP requests
+- Format data responses (JSON) to a form appropriate to the web interface
+- Provide option to visualize data with tools such as graphs
+- Provide option to download data in CSV format
+- Aesthetically pleasing UI
+
 
 ## References
 

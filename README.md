@@ -18,13 +18,24 @@ The physical structure and electronics will be developed and built separately as
 
 ## User Stories
 
+We envision 3 types of users who would use the HydRC4nics system:
+
+- Administrators will have full control over the system and its functionalities. The administrators will be a small core team of RC4 students.
+
+- Operators will only have access to controlling the system through commands (e.g. turning on and off the lights, adding water) and viewing of data (e.g. measuring the nutrient content of the water). The operators will be comprised of RC4 students who have shown interest in learning about the system.
+
+- Viewers will only have access to viewing data from the system. This last group consists of all other interested individuals such as other NUS students or members of the public.
+
+We envision each type of user to use the HydRC4nics system in ways similar to those listed below:
+
+
 1. As an operator who wants to monitor the lights, water levels and nutrient levels in the system, I want to be able to access the information remotely and conveniently.
 
 2. As an operator who wants to control the system, I want to be able to control the system remotely through an easy to use interface.
 
 3. As an interested individual who is curious about the system, I want to be able to view information and data on the system remotely and submit suggestions quickly and conveniently.
 
-4. As an administrator who wants to prevent abuse of the system, I want to be able to identify abusers, warn them, and ban them if they continue to cause problems.
+4. As an administrator who wants to prevent abuse of the system, I want to be able to identify abusers, and restrict their access if they continue to cause problems.
 
 ## System Overview
 

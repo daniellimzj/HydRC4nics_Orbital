@@ -2,7 +2,7 @@ import sys
 import requests
 import datetime
 
-from flask import Flask, render_template_string, render_template, flash
+from flask import Flask, render_template_string, render_template, flash, Response
 
 from flask_bootstrap import Bootstrap
 
@@ -214,6 +214,24 @@ def readingsPage():
             <iframe src="http://localhost:8080/dash" style="height: 100vh; width: 100%; scrolling: no; frameborder: 0">
             {% endblock %}""")
 
+@application.route("/downloads")
+def downloadsPage():
+    return render_template_string("""
+        {% extends "main.html" %}
+        {% block content %}
+        <a href="{{ url_for('getCSV') }}">Click me to download latest.</a>
+        {% endblock %}""")
+
+@application.route("/getCSV")
+def getCSV():
+    # with open("outputs/Adjacency.csv") as fp:
+    #     csv = fp.read()
+    csv = '1,2,3\n4,5,6\n'
+    return Response(
+        csv,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=mydata.csv"})
 
 if __name__ == "__main__":
     # http://flask.pocoo.org/docs/0.12/errorhandling/#working-with-debuggers

@@ -23,7 +23,7 @@ def start(update, context):
     global user, chatid, admin
     user = update.message.from_user
     chatid = update.message.chat.id
-    admin = user.username in tb.administrators
+    admin = True #user.username in tb.administrators
 
 
     mn.initialiseMenus()

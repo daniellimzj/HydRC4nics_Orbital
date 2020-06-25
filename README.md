@@ -28,7 +28,6 @@ We envision 3 types of users who would use the HydRC4nics system:
 
 We envision each type of user to use the HydRC4nics system in ways similar to those listed below:
 
-
 1. As an operator who wants to monitor the lights, water levels and nutrient levels in the system, I want to be able to access the information remotely and conveniently.
 
 2. As an operator who wants to control the system, I want to be able to control the system remotely through an easy to use interface.

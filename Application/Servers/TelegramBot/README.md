@@ -1,13 +1,8 @@
 # Telegram Bot
 
-## Bot Functions
-
-For administrators: Send commands and view data
-
-For users: View data
-
-Sending commands consists of sending a value to an actuator. E.g. setting a value of 0 to a light would turn it off.
-Viewing data consists of viewing a number of recent commands from either all sensors, or one specific sensor.
+## Implementation
+ 
+The Python Telegram Bot wrapper is used to access the Telegram Bot API. Users will enter a 'conversation' with the Bot when they first send the /start command, and based on button and text inputs, sends back commands through the functions defined in the db.py module.
 
 ## References
 

@@ -116,7 +116,8 @@ Actuator Response:
                 "purpose": "string",
                 "issueDate": "2020-05-20T15:43:34.052+08:00",
                 "executeDate": "2020-05-20T15:43:34.052+08:00",
-                "repeat": 0
+                "repeat": 0,
+                "completed": false
             }
         }
     ]
@@ -134,7 +135,8 @@ Command Response:
     "purpose": "string",
     "issueDate": "2020-05-20T15:50:11.590+08:00",
     "executeDate": "2020-05-20T15:50:11.590+08:00",
-    "repeat": 0
+    "repeat": 0,
+    "completed": false
 }
 ```
 

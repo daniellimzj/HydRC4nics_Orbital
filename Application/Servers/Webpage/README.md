@@ -1,19 +1,8 @@
 # Webpage
 
-## Functions
+## Implementation
 
-The webpage shares a common database with the Telegram Bot and provides the same functionality. The only difference will be the interface, where the webpage can make use of it’s increased flexibility to display more information and provide more options when controlling the system.
-
-- Differentiate users based on a login system
-- Commands made available to operators only through their login credentials
-- Data viewing made available to all users
-- Creation of different routes for sending commands and retrieving data
-- Convert commands sent to the webpage to HTTP requests
-- Format data responses (JSON) to a form appropriate to the web interface
-- Provide option to visualize data with tools such as graphs
-- Provide option to download data in CSV format
-- Aesthetically pleasing UI
-
+The webpage is created using Flask as the framework to control the webpage. Flask-WTF, an extension building on WTForms, is used to handle form creation and validation, for users to send commands and choose which data they wish to view. Jinja is used within Flask to dynamically update webpages through using Python variables to generate each webpage. The styling and appearance of the webpage is decided with Bootstrap, due to its convenience and ease of use. Dash is used to create aesthetically pleasing and functional graphs for viewing of data. For the production server, Waitress is used to create a stable Web Server Gateway Interface (WSGI) server. The login system will be implemented using JSON Web Tokens (JWT) in future updates.
 
 ## References
 
@@ -38,6 +27,6 @@ The webpage shares a common database with the Telegram Bot and provides the same
 - <https://towardsdatascience.com/how-to-embed-bootstrap-css-js-in-your-python-dash-app-8d95fc9e599e>
 - <https://dash-bootstrap-components.opensource.faculty.ai/>
 
-### CSV
+### Downloadable CSV
 
 - <https://stackoverflow.com/questions/30024948/flask-download-a-csv-file-on-clicking-a-button>

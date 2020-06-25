@@ -35,3 +35,7 @@ Future updates will implement a registration and login system such that only aut
 - <https://community.plotly.com/t/dcc-loading-for-loading-graph-s/23039>
 - <https://towardsdatascience.com/how-to-embed-bootstrap-css-js-in-your-python-dash-app-8d95fc9e599e>
 - <https://dash-bootstrap-components.opensource.faculty.ai/>
+
+### CSV
+
+- <https://stackoverflow.com/questions/30024948/flask-download-a-csv-file-on-clicking-a-button>

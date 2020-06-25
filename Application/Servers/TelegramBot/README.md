@@ -1,7 +1,7 @@
 # Telegram Bot
 
 ## Implementation
- 
+
 The Python Telegram Bot wrapper is used to access the Telegram Bot API. Users will enter a 'conversation' with the Bot when they first send the /start command, and based on button and text inputs, sends back commands through the functions defined in the db.py module.
 
 ## References

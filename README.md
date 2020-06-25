@@ -20,11 +20,11 @@ The physical structure and electronics will be developed and built separately as
 
 We envision 3 types of users who would use the HydRC4nics system:
 
-- Administrators will have full control over the system and its functionalities. The administrators will be a small core team of RC4 students.
-
-- Operators will only have access to controlling the system through commands (e.g. turning on and off the lights, adding water) and viewing of data (e.g. measuring the nutrient content of the water). The operators will be comprised of RC4 students who have shown interest in learning about the system.
-
-- Viewers will only have access to viewing data from the system. This last group consists of all other interested individuals such as other NUS students or members of the public.
+| Roles          | Responsibilities                                                                                                                                                                                                                                                                   |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Administrators | Full control over the system and its functionalities. This includes monitoring the number of accounts with access to the system, etc. The administrators will be a small core team of RC4 students.                                                                                |
+| Operators      | Access to controlling the system through commands (e.g. turning on and off the lights, adding water) and viewing of data (e.g. measuring the nutrient content of the water). The operators will be comprised of RC4 students who have shown interest in learning about the system. |
+| Viewers        | will only have access to viewing data from the system. They can be anonymous. This last group consists of all other interested individuals such as other NUS students or members of the public.                                                                                    |
 
 We envision each type of user to use the HydRC4nics system in ways similar to those listed below:
 
@@ -58,13 +58,14 @@ Webpage
 - Dash, Plotly
 - Waitress (WSGI)
 
-Database
+Database Server
 
 - C#
 - Entity Framework Core
 - REST API
 - Serial Communication
 - JSON Web Token (JWT)
+- SQLite
 
 ## Setup
 

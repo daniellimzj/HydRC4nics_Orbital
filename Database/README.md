@@ -1,4 +1,4 @@
-# Database
+# Database Server
 
 This server uses EFCore with a 3-tier architecture. Database uses SQLite. The database will store sensor data polled from the microcontroller and commands to be sent to the microcontroller. Interfaces will be able to request information from and send instructions to the database through a REST API view layer.
 
@@ -8,7 +8,7 @@ The identity server uses JWT for claim-based athorization with a master user (de
 
 One sensor has many readings. One actuator has many commands. Sensors and actuators are labelled by their position in the structure.
 
-## System Functions
+## Automatic Monitoring and Controls
 
 ### Monitoring
 

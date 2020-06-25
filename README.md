@@ -157,5 +157,5 @@ Webpage
 ```bash
 tmux
 cd Application
-python3 web.py
+waitress-serve web:app
 ```

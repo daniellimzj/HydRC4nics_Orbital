@@ -55,7 +55,8 @@ Webpage
 - Flask
 - HTML, CSS, Javascript
 - Bootstrap
-- Dash
+- Dash, Plotly
+- Waitress (WSGI)
 
 Database
 
@@ -63,6 +64,7 @@ Database
 - Entity Framework Core
 - REST API
 - Serial Communication
+- JSON Web Token (JWT)
 
 ## Setup
 

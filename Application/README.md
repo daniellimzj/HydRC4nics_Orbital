@@ -31,4 +31,3 @@ Source code and further documentation can be found in `./Servers/Webpage`.
 - Provide option to visualize data with tools such as graphs using Dash
 - Provide option to download data in CSV format
 - Aesthetically pleasing UI with Bootstrap
-

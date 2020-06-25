@@ -148,12 +148,14 @@ Telegram Bot
 
 ```bash
 tmux
-python3 Application/bot.py
+cd Application
+python3 bot.py
 ```
 
 Webpage
 
 ```bash
 tmux
-python3 Application/web.py
+cd Application
+python3 web.py
 ```

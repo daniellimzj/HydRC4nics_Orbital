@@ -28,9 +28,6 @@ def initialiseMenus():
     actuatorOptions = []
     sensorOptions = []
 
-    print(sensorsList, end = '\n\n\n')
-
-    
     for sensor in sensorsList:
         temptext = str(sensor['type']) + ' ' + str(sensor['position'])
         tempdata = str(sensor['id'])

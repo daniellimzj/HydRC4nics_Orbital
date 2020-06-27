@@ -135,15 +135,18 @@ def dataHandler(update, context):
     query = update.callback_query
     if query.data == "RECENT":
         viewdata = db.getReadings(latest = 1)
-        print(viewdata)
+        print(viewdata, end  = '\n\n\n')
 
         messageText = "<b>All Recent Readings:</b>\n\n"
 
         for sensor in viewdata:
             sensorText = str(sensor['type']) + ' ' + str(sensor['position'])
-            readingText = str(sensor['readings'][0]['value']) + ' ' + str(sensor['readings'][0]['units'])
-            timeText = datetime.datetime.strptime(sensor['readings'][0]['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
-            messageText = messageText + sensorText + ': ' + readingText  + ' on ' + timeText + '\n'
+            if len(sensor['readings']) > 0:
+                readingText = str(sensor['readings'][0]['value']) + ' ' + str(sensor['readings'][0]['units'])
+                timeText = datetime.datetime.strptime(sensor['readings'][0]['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
+                messageText = messageText + sensorText + ': ' + readingText  + ' on ' + timeText + '\n'
+            else:
+                messageText = messageText + sensorText + ": No readings" + '\n'
 
         context.bot.send_message(
                                 text = messageText,
@@ -185,10 +188,14 @@ def readingsHandler(update, context):
         sensorText = str(viewdata['type']) + ' ' + str(viewdata['position'])
         messageText = f"<b>{sensorText} Readings:</b>\n\n"
 
-        for reading in viewdata['readings']:   
-            readingText = str(reading['value']) + ' ' + str(reading['units'])
-            timeText = datetime.datetime.strptime(reading['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
-            messageText = messageText + readingText + ' on ' + timeText + '\n'
+        if len(viewdata['readings']) > 0:
+            for reading in viewdata['readings']:   
+                readingText = str(reading['value']) + ' ' + str(reading['units'])
+                timeText = datetime.datetime.strptime(reading['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
+                messageText = messageText + readingText + ' on ' + timeText + '\n'
+        
+        else:
+            messageText = messageText + "No readings yet\n"
 
         context.bot.send_message(
                             text = messageText,

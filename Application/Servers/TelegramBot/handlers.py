@@ -54,7 +54,7 @@ def startHandler(update, context):
             messageText = myfile.read()
         
         context.bot.send_message(
-                                text = messaegText,
+                                text = messageText,
                                 chat_id = chatid,
                                 parse_mode = ParseMode.HTML,
                                 reply_markup = InlineKeyboardMarkup(mn.startOverMenu))
@@ -142,7 +142,7 @@ def dataHandler(update, context):
         for sensor in viewdata:
             sensorText = str(sensor['type']) + ' ' + str(sensor['position'])
             readingText = str(sensor['readings'][0]['value']) + ' ' + str(sensor['readings'][0]['units'])
-            timeText = datetime.datetime.strptime(sensor['readings'][0]['timeStamp'], '%Y-%m-%dT%H:%M:%S.%f').strftime("%m/%d/%y at %I:%M%p")
+            timeText = datetime.datetime.strptime(sensor['readings'][0]['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
             messageText = messageText + sensorText + ': ' + readingText  + ' on ' + timeText + '\n'
 
         context.bot.send_message(
@@ -187,7 +187,7 @@ def readingsHandler(update, context):
 
         for reading in viewdata['readings']:   
             readingText = str(reading['value']) + ' ' + str(reading['units'])
-            timeText = datetime.datetime.strptime(reading['timeStamp'], '%Y-%m-%dT%H:%M:%S.%f').strftime("%m/%d/%y at %I:%M%p")
+            timeText = datetime.datetime.strptime(reading['timeStamp'], '%Y-%m-%dT%H:%M:%S').strftime("%m/%d/%y at %I:%M%p")
             messageText = messageText + readingText + ' on ' + timeText + '\n'
 
         context.bot.send_message(

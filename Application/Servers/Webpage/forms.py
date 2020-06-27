@@ -29,12 +29,8 @@ class RangeForm(FlaskForm):
 
 # to get data
 class SensorForm(FlaskForm):
-    sensorsList = db.getAllSensors()
-    choices = [(100, "All Sensors")]
-    for sensor in sensorsList:
-        choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
 
-    selectSensor = SelectField("Select a sensor:", choices = choices, validators = [DataRequired()])
+    selectSensor = SelectField("Select a sensor:", validators = [DataRequired()])
     selectReadings = FormField(RangeForm)
 
     def validate(self):
@@ -47,13 +43,8 @@ class SensorForm(FlaskForm):
 
 # to view commands
 class CommandsForm(FlaskForm):
-
-    actuatorsList = db.getAllActuators()
-    choices = [(100, "All Actuators")]
-    for actuator in actuatorsList:
-        choices.append((actuator['id'], f"{actuator['type']} {actuator['position']}"))
     
-    selectActuator = SelectField("Select an Actuator:", choices = choices)
+    selectActuator = SelectField("Select an Actuator:")
     selectCommandsType = SelectField("Select the type of commands:", choices = [(1, "Active Commands"), (2, "Recent Commands"), (3, "Time Range")])
     selectCommands = FormField(RangeForm)
 
@@ -77,16 +68,14 @@ class CommandsForm(FlaskForm):
 
 # to send commands
 class CommandForm(FlaskForm):
-    actuatorsList = db.getAllActuators()
-    choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
 
-    selectActuator = SelectField("Select an Actuator:", choices = choices)
+    selectActuator = SelectField("Select an Actuator:")
     value = IntegerField('Value:', validators = [DataRequired()])
     units = StringField('Units:', validators = [DataRequired()])
     issuer = StringField('Issuer:', validators = [DataRequired()])
     purpose = StringField('Purpose:', validators = [DataRequired()])
     executeDate = DateTimeLocalField('Date to execute:', format = '%Y-%m-%dT%H:%M')
-    repeat = IntegerField('Number of times to repeat:')
+    repeat = IntegerField('Minutes between repetitions:')
 
 
 
@@ -96,7 +85,7 @@ class UpdateCommandForm(FlaskForm):
     issuer = StringField('New issuer:', validators = [DataRequired()])
     purpose = StringField('New purpose:', validators = [DataRequired()])
     executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M', validators = [DataRequired()])
-    repeat = IntegerField('New number of times to repeat:', validators = [DataRequired()])
+    repeat = IntegerField('New minutes between repetitions:', validators = [DataRequired()])
 
 
 
@@ -109,10 +98,8 @@ class AddForm(FlaskForm):
 
 # to update an actuator
 class UpdateActuatorForm(FlaskForm):
-    actuatorsList = db.getAllActuators()
-    choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
-    
-    selectActuator = SelectField("Select an Actuator:", choices = choices)
+
+    selectActuator = SelectField("Select an Actuator:")
     position = StringField('New Position:', validators = [DataRequired()])
     type = StringField('New Type:', validators = [DataRequired()])
 
@@ -120,9 +107,7 @@ class UpdateActuatorForm(FlaskForm):
 
 # to update a sensor
 class UpdateSensorForm(FlaskForm):
-    sensorsList = db.getAllSensors()
-    choices = [(sensor['id'], f"{sensor['type']} {sensor['position']}") for sensor in sensorsList]
     
-    selectSensor = SelectField("Select an Sensor:", choices = choices)
+    selectSensor = SelectField("Select an Sensor:")
     position = StringField('New Position:', validators = [DataRequired()])
     type = StringField('New Type:', validators = [DataRequired()])

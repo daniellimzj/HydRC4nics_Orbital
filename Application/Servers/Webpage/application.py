@@ -34,6 +34,13 @@ def getData():
     sensorFlag = False
 
     sensorForm = f.SensorForm()
+        
+    sensorsList = db.getAllSensors()
+    choices = [(100, "All Sensors")]
+    for sensor in sensorsList:
+        choices.append((sensor['id'], f"{sensor['type']} {sensor['position']}"))
+
+    sensorForm.selectSensor.choices = choices
 
     readingsList = []
 
@@ -79,6 +86,13 @@ def viewCommands():
     actuatorFlag = False
 
     commandsForm = f.CommandsForm()
+    
+    actuatorsList = db.getAllActuators()
+    choices = [(100, "All Actuators")]
+    for actuator in actuatorsList:
+        choices.append((actuator['id'], f"{actuator['type']} {actuator['position']}"))
+
+    commandsForm.selectActuator.choices = choices
 
     commandsList = []
 
@@ -90,7 +104,6 @@ def viewCommands():
 
         else:
             actuatorId = commandsForm.selectActuator.data
-            print(actuatorId)
             actuatorFlag = True
 
         activeFlag = True if commandsForm.selectCommandsType.data =='1' else False
@@ -100,7 +113,7 @@ def viewCommands():
         end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
 
         commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), start = start, end = end, active = activeFlag)
-        print(commandsList)
+        print(commandsList, end = '\n\n\n')
 
     else:
         commandsList = []
@@ -115,12 +128,14 @@ def sendCommands():
     success = None
     commandForm = f.CommandForm()
 
+    actuatorsList = db.getAllActuators()
+    commandForm.selectActuator.choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
+
     if commandForm.validate_on_submit():
         command = db.addCommand(actuatorId = commandForm.selectActuator.data, value = commandForm.value.data,
                              units = commandForm.units.data, issuer = commandForm.issuer.data,
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
                              repeat = commandForm.repeat.data)
-        print(command)
         success = "Command Sent Successfully!"
     
     else:
@@ -158,18 +173,17 @@ def addSensors():
 def updateCommand(actuatorId, commandId):
 
     command = db.getCommands(commandId = commandId)
-    print(command, end = '\n\n')
     actuator = db.getCommands(actuatorId = actuatorId)
 
     updateForm = f.UpdateCommandForm()
 
     if updateForm.validate_on_submit():
+        print(updateForm.value.data, end='\n\n\n')
         newCommand = db.updateCommand(actuatorId = actuatorId, commandId = commandId,
                                    value = updateForm.value.data, units = command['units'],
                                    issuer = updateForm.issuer.data, purpose = updateForm.purpose.data,
                                    issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
                                    repeat = updateForm.repeat.data)
-        print(newCommand)
 
     return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator)
     
@@ -179,12 +193,14 @@ def updateCommand(actuatorId, commandId):
 def updateActuators():
 
     updateForm = f.UpdateActuatorForm()
+    
+    actuatorsList = db.getAllActuators()
+    updateForm.selectActuator.choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
 
     if updateForm.validate_on_submit():
         actuator = db.updateActuator(actuatorId = updateForm.selectActuator.data,
                        position = updateForm.position.data,
                        actuatorType = updateForm.type.data)
-        print(actuator)
 
     return render_template("update-actuators.html", updateForm = updateForm)
 
@@ -194,12 +210,14 @@ def updateActuators():
 def updateSensors():
 
     updateForm = f.UpdateSensorForm()
+    
+    sensorsList = db.getAllSensors()
+    updateForm.selectSensor.choices = [(sensor['id'], f"{sensor['type']} {sensor['position']}") for sensor in sensorsList]
 
     if updateForm.validate_on_submit():
         sensor = db.updateSensor(sensorId = updateForm.selectSensor.data,
                        position = updateForm.position.data,
                        sensorType = updateForm.type.data)
-        print(sensor)
 
     return render_template("update-sensors.html", updateForm = updateForm)
 

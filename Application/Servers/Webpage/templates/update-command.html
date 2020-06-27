@@ -10,19 +10,19 @@
         {{ updateForm.csrf_token }}
           <div class="control-group my-auto">
             <p>Previous value: {{ command["value"] }}</p>
-            {{ wtf.form_field(updateForm.value, placeholder = command["value"]) }}
+            {{ wtf.form_field(updateForm.value, placeholder = command["value"], value = command["value"]) }}
 
             <p>Previous Issuer: {{ command["issuer"] }}</p>
-            {{ wtf.form_field(updateForm.issuer, placeholder = command["issuer"]) }}
+            {{ wtf.form_field(updateForm.issuer, placeholder = command["issuer"], value = command["issuer"]) }}
             
             <p>Previous purpose: {{ command["purpose"] }}</p>
-            {{ wtf.form_field(updateForm.purpose, placeholder = command["purpose"]) }}
+            {{ wtf.form_field(updateForm.purpose, placeholder = command["purpose"], value = command["purpose"]) }}
 
             <p>Previous execute date: {{ command["executeDate"] }}</p>
-            {{ wtf.form_field(updateForm.executeDate, placeholder = command["executeDate"]) }}
+            {{ wtf.form_field(updateForm.executeDate, value = command["executeDate"]) }}
 
             <p>Previous number of times to repeat: {{ command["repeat"] }}</p>
-            {{ wtf.form_field(updateForm.repeat, placeholder = command["repeat"]) }}
+            {{ wtf.form_field(updateForm.repeat, placeholder = command["repeat"], value = command["repeat"]) }}
 
            <div class="controls">
                 <input class="btn btn-primary" type="submit" value="Update">

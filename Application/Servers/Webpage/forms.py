@@ -85,7 +85,7 @@ class UpdateCommandForm(FlaskForm):
     issuer = StringField('New issuer:', validators = [DataRequired()])
     purpose = StringField('New purpose:', validators = [DataRequired()])
     executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M', validators = [DataRequired()])
-    repeat = IntegerField('New minutes between repetitions:', validators = [DataRequired()])
+    repeat = IntegerField('New minutes between repetitions:')
 
 
 

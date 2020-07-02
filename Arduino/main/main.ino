@@ -17,7 +17,7 @@ char inputString[200] = "";         // a string to hold incoming data
 
 unsigned long prev = millis();
 long second = 1000;
-unsigned long interval = 60 * second; // 1 minute
+unsigned long interval = 30 * 60 * second; // 30 minute
 
 void setup() {
   // declare the ledPin as an OUTPUT:

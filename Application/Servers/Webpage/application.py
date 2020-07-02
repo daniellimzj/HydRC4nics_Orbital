@@ -2,10 +2,11 @@ import sys
 import requests
 import datetime
 
-from flask import Flask, render_template_string, render_template, flash, Response
+from flask import Flask, render_template_string, render_template, flash, Response, session
 
 from flask_bootstrap import Bootstrap
 
+from flask_session import Session
 
 from .. import db
 from .. import config
@@ -18,11 +19,42 @@ application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
 Bootstrap(application)
 
+application.config["SESSION_PERMANENT"] = False
+application.config["SESSION_TYPE"] = "filesystem"
+Session(application)
+
 ############################################
 
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    return render_template('index.html')
+    session["user"] = {}
+    login = bool(session["user"])
+
+    return render_template('index.html', login = login)
+
+############################################
+
+@application.route("/login", methods=("GET", "POST"))
+def login():
+
+    login = bool(session["user"])
+    loginForm = f.LoginForm()
+    
+    return render_template('login.html', login = login, loginForm = loginForm)
+
+
+@application.route("/signup", methods=("GET", "POST"))
+def signup():
+
+    login = bool(session["user"])
+    signupForm = f.SignupForm()
+    
+    return render_template('signup.html', login = login, signupForm = signupForm)
+
+@application.route("/logout", methods=("GET", "POST"))
+def logout():
+    return render_template('index.html', login = login)
+
 
 ############################################
 

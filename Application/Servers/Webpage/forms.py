@@ -9,14 +9,28 @@ from flask import Flask, render_template_string, render_template, flash
 from flask_bootstrap import Bootstrap
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
 
-from wtforms import StringField, IntegerField, RadioField, FormField, SelectField
-from wtforms.fields.html5 import DateTimeLocalField
-from wtforms.validators import DataRequired, Optional, ValidationError
+from wtforms import StringField, IntegerField, RadioField, FormField, SelectField, PasswordField
+from wtforms.fields.html5 import DateTimeLocalField, EmailField
+from wtforms.validators import DataRequired, Optional, ValidationError, Email, EqualTo
 
 from .. import config
 from .. import db
+
+
+
+# login form
+class LoginForm(FlaskForm):
+    email = EmailField('Your Email:', validators = [Email()])
+    password = PasswordField('Your Password:', validators = [DataRequired()])
+
+
+# signup form
+class SignupForm(FlaskForm):
+    email = EmailField('Your Email:', validators = [Email()])
+    name = StringField('Your Name:', validators = [DataRequired()])
+    password = PasswordField('Your Password:', validators = [DataRequired(), EqualTo('confirm')])
+    confirm = PasswordField('Password Confirmation:', validators = [DataRequired()])
 
 
 # reusable form

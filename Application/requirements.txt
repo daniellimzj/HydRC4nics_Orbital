@@ -1,7 +1,9 @@
 requests==2.23
 Flask==1.1.2
 Flask-WTF==0.14.3
+Flask-Session==0.3.2
 flask-bootstrap==3.3.7.1
+email_validator==1.1.1
 python-telegram-bot==12.7
 pandas==1.0.4
 plotly==4.8.1

@@ -27,7 +27,8 @@ Session(application)
 
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    session["user"] = {}
+    if session["user"] is None:
+        session["user"] = {}
     login = bool(session["user"])
 
     return render_template('index.html', login = login)
@@ -39,6 +40,15 @@ def login():
 
     login = bool(session["user"])
     loginForm = f.LoginForm()
+
+    if loginForm.validate_on_submit():
+        print("placeholder")
+        session["user"] = db.login(loginForm.email.data, loginForm.password.data)
+        print(session["user"])
+
+        login = bool(session["user"])
+
+        return render_template('index.html', login = login)
     
     return render_template('login.html', login = login, loginForm = loginForm)
 
@@ -48,18 +58,35 @@ def signup():
 
     login = bool(session["user"])
     signupForm = f.SignupForm()
+
+    if signupForm.validate_on_submit():
+        print(signupForm.email.data)
+        print(signupForm.name.data)
+        print(signupForm.password.data)
+        print(signupForm.confirm.data)
+
+        register = db.register(signupForm.email.data, signupForm.name.data, signupForm.password.data)
+        print(register)
     
     return render_template('signup.html', login = login, signupForm = signupForm)
 
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
-    return render_template('index.html', login = login)
+
+    session["user"] = {}
+
+    print(session["user"])
+
+    return render_template('logout.html', login = login)
 
 
 ############################################
 
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
+
+    login = bool(session["user"])
+
     numRecent = 0
     start = None
     end = None
@@ -102,12 +129,14 @@ def getData():
     else:
         readingsList = []
 
-    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag)
+    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag, login = login)
 
 ############################################
 
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
+
+    login = bool(session["user"])
 
     numRecent = 0
     start = None
@@ -150,12 +179,14 @@ def viewCommands():
     else:
         commandsList = []
 
-    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag, actuatorFlag = actuatorFlag)
+    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag, actuatorFlag = actuatorFlag, login = login)
 
 ############################################
 
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
+
+    login = bool(session["user"])
 
     success = None
     commandForm = f.CommandForm()
@@ -173,36 +204,42 @@ def sendCommands():
     else:
         success = None
 
-    return render_template("send-commands.html", commandForm = commandForm, success = success)  
+    return render_template("send-commands.html", commandForm = commandForm, success = success, login = login)  
 
 ############################################
 
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
+    login = bool(session["user"])
+
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
         actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data)
 
-    return render_template("add-actuators.html", addForm = addForm)
+    return render_template("add-actuators.html", addForm = addForm, login = login)
 
 ############################################
 
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
+    login = bool(session["user"])
+
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
         actuator = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data)
 
-    return render_template("add-sensors.html", addForm = addForm)
+    return render_template("add-sensors.html", addForm = addForm, login = login)
 
 ############################################
 
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
+
+    login = bool(session["user"])
 
     command = db.getCommands(commandId = commandId)
     actuator = db.getCommands(actuatorId = actuatorId)
@@ -217,12 +254,14 @@ def updateCommand(actuatorId, commandId):
                                    issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
                                    repeat = updateForm.repeat.data)
 
-    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator)
+    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator, login = login)
     
 ############################################
 
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
+
+    login = bool(session["user"])
 
     updateForm = f.UpdateActuatorForm()
     
@@ -234,12 +273,14 @@ def updateActuators():
                        position = updateForm.position.data,
                        actuatorType = updateForm.type.data)
 
-    return render_template("update-actuators.html", updateForm = updateForm)
+    return render_template("update-actuators.html", updateForm = updateForm, login = login)
 
 ############################################
 
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
+
+    login = bool(session["user"])
 
     updateForm = f.UpdateSensorForm()
     
@@ -251,26 +292,37 @@ def updateSensors():
                        position = updateForm.position.data,
                        sensorType = updateForm.type.data)
 
-    return render_template("update-sensors.html", updateForm = updateForm)
+    return render_template("update-sensors.html", updateForm = updateForm, login = login)
 
 dashboard.startDashboard(application)
 
+############################################
+
 @application.route("/readings")
 def readingsPage():
+
+    login = bool(session["user"])
 
     return render_template_string("""
             {% extends "main.html" %}
             {% block content %}
             <iframe src="/dash" style="height: 100vh; width: 100%; scrolling: no; frameborder: 0">
-            {% endblock %}""")
+            {% endblock %}""", login = login)
+
+############################################
 
 @application.route("/downloads")
 def downloadsPage():
+    
+    login = bool(session["user"])
+
     return render_template_string("""
         {% extends "main.html" %}
         {% block content %}
         <a href="{{ url_for('getCSV') }}">Click me to download latest.</a>
-        {% endblock %}""")
+        {% endblock %}""", login = login)
+
+############################################
 
 @application.route("/getCSV")
 def getCSV():

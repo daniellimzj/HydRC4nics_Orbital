@@ -14,7 +14,9 @@
             {{ wtf.form_field(signupForm.name) }}
             {{ wtf.form_field(signupForm.password) }}
             {{ wtf.form_field(signupForm.confirm) }}
-
+            <div class="alert alert-primary" role="alert">
+              Please be reminded to never reuse the same password! Always use a new password for every account.
+            </div>
           </div>
 
            <sdiv class="control-group">
@@ -24,6 +26,5 @@
           </div>
     </form>
 </div>
-
 
 {% endblock %}

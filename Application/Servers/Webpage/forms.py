@@ -91,6 +91,12 @@ class CommandForm(FlaskForm):
     executeDate = DateTimeLocalField('Date to execute:', format = '%Y-%m-%dT%H:%M')
     repeat = IntegerField('Minutes between repetitions:')
 
+    def validate(self):
+        if self.executeDate.data < datetime.datetime.now():
+            flash("Please ensure the execute date has not already passed!")
+            return False
+        return True
+
 
 
 # to update commands

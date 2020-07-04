@@ -74,6 +74,9 @@
             {% if not login %}
               <li><a href="{{url_for('login')}}" class = "btn btn-outline-primary active" role="button" aria-pressed="true">Login</a></li>
             {% else %}
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">Hello, {{ session["user"]["name"] }}</a>
+              </li>
               <li><a href="{{url_for('logout')}}" class = "btn btn-outline-primary active" role="button" aria-pressed="true">Logout</a></li>
             {% endif %}
             

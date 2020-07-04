@@ -58,6 +58,7 @@ def signup():
 
     login = bool(session["user"])
     signupForm = f.SignupForm()
+    register = None
 
     if signupForm.validate_on_submit():
         print(signupForm.email.data)
@@ -68,12 +69,13 @@ def signup():
         register = db.register(signupForm.email.data, signupForm.name.data, signupForm.password.data)
         print(register)
     
-    return render_template('signup.html', login = login, signupForm = signupForm)
+    return render_template('signup.html', login = login, signupForm = signupForm, register = register)
 
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
 
     session["user"] = {}
+    login = bool(session["user"])
 
     print(session["user"])
 
@@ -188,7 +190,7 @@ def sendCommands():
 
     login = bool(session["user"])
 
-    success = None
+    success = False
     commandForm = f.CommandForm()
 
     actuatorsList = db.getAllActuators()
@@ -199,10 +201,10 @@ def sendCommands():
                              units = commandForm.units.data, issuer = commandForm.issuer.data,
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
                              repeat = commandForm.repeat.data)
-        success = "Command Sent Successfully!"
+        success = True
     
     else:
-        success = None
+        success = False
 
     return render_template("send-commands.html", commandForm = commandForm, success = success, login = login)  
 
@@ -213,12 +215,14 @@ def addActuators():
 
     login = bool(session["user"])
 
+    actuator = None
+
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
         actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data)
 
-    return render_template("add-actuators.html", addForm = addForm, login = login)
+    return render_template("add-actuators.html", addForm = addForm, login = login, actuator = actuator)
 
 ############################################
 
@@ -227,12 +231,14 @@ def addSensors():
 
     login = bool(session["user"])
 
+    sensor = None
+
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
-        actuator = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data)
+        sensor = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data)
 
-    return render_template("add-sensors.html", addForm = addForm, login = login)
+    return render_template("add-sensors.html", addForm = addForm, login = login, sensor = sensor)
 
 ############################################
 
@@ -244,6 +250,8 @@ def updateCommand(actuatorId, commandId):
     command = db.getCommands(commandId = commandId)
     actuator = db.getCommands(actuatorId = actuatorId)
 
+    newCommand = None
+
     updateForm = f.UpdateCommandForm()
 
     if updateForm.validate_on_submit():
@@ -254,7 +262,7 @@ def updateCommand(actuatorId, commandId):
                                    issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
                                    repeat = updateForm.repeat.data)
 
-    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator, login = login)
+    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator, login = login, newCommand = newCommand)
     
 ############################################
 
@@ -268,12 +276,14 @@ def updateActuators():
     actuatorsList = db.getAllActuators()
     updateForm.selectActuator.choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
 
+    actuator = None
+
     if updateForm.validate_on_submit():
         actuator = db.updateActuator(actuatorId = updateForm.selectActuator.data,
                        position = updateForm.position.data,
                        actuatorType = updateForm.type.data)
 
-    return render_template("update-actuators.html", updateForm = updateForm, login = login)
+    return render_template("update-actuators.html", updateForm = updateForm, login = login, actuator = actuator)
 
 ############################################
 
@@ -287,12 +297,14 @@ def updateSensors():
     sensorsList = db.getAllSensors()
     updateForm.selectSensor.choices = [(sensor['id'], f"{sensor['type']} {sensor['position']}") for sensor in sensorsList]
 
+    sensor = None
+
     if updateForm.validate_on_submit():
         sensor = db.updateSensor(sensorId = updateForm.selectSensor.data,
                        position = updateForm.position.data,
                        sensorType = updateForm.type.data)
 
-    return render_template("update-sensors.html", updateForm = updateForm, login = login)
+    return render_template("update-sensors.html", updateForm = updateForm, login = login, sensor = sensor)
 
 dashboard.startDashboard(application)
 

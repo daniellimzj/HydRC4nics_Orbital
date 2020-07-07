@@ -37,7 +37,7 @@ namespace EFCoreSample.Controls.Domain
                 return null;
             }
 
-            _port.Serial.WriteLine(actuator.Value.Position + ":" + command.Value.Value);
+            // _port.Serial.WriteLine(actuator.Value.Position + ":" + command.Value.Value);
             Console.WriteLine("Completed: " + result.Id);
             return result;
 

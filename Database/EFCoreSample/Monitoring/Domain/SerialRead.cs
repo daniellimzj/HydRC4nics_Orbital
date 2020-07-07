@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using EFCoreSample.Controls.Domain;
 using EFCoreSample.Monitoring.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EFCoreSample.Monitoring.Domain
 {
     public class SerialRead : ISerialRead
     {
         private readonly IPort _port;
-        private readonly IReadingRepository _repo;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         public List<Guid> Sequence { get; set; }
+        
 
-        public SerialRead(IReadingRepository repo, IPort port)
+        public SerialRead(IReadingRepository repo, IPort port, IServiceScopeFactory serviceScopeFactory)
         {
             _port = port;
-            _repo = repo;
+            _serviceScopeFactory = serviceScopeFactory;
             Sequence = null;
         }
 
@@ -48,24 +51,27 @@ namespace EFCoreSample.Monitoring.Domain
         private async void port_DataReceived(object sender,
             SerialDataReceivedEventArgs e)
         {
-            var data = new List<string>(_port.Serial.ReadExisting().Split(','));
+            var data = new List<string>(_port.Serial.ReadLine().Split(','));
             // Show all the incoming data in the port's buffer
-            Console.WriteLine(data);
-            // TimeStamp, Value1, Units1, Value2, Units2, ...
-            var timeStamp = DateTime.Parse(data[0]);
-            data.RemoveAt(0);
-
-            for (var i = 0; i < Sequence.Count; i++)
+            data.ForEach(i => Console.Write("{0}\t", i));
+            // Value1, Units1, Value2, Units2, ...
+            var timeStamp = DateTime.Now;
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                if (data.Count <= 2 * i) continue; // In case not all serial data was read
-                var reading = ToReadingValue(int.Parse(data[2*i]), data[2*i+1], timeStamp);
-                var result = await _repo.Add(Sequence[i], reading);
+                for (var i = 0; i < Sequence.Count; i++)
+                {
+                    if (data.Count < 2 * (i + 1)) break; // In case not all serial data was read
+                    var canConvert = int.TryParse(data[2 * i], out var val);
+                    if (!canConvert)
+                    {
+                        Console.WriteLine("Serial data error: value is not a number");
+                        break;
+                    }
+                    var reading = new ReadingValue(val, data[2 * i + 1], timeStamp);
+                    var repo = scope.ServiceProvider.GetRequiredService<IReadingRepository>();
+                    _ = await repo.Add(Sequence[i], reading);
+                }
             }
-        }
-        
-        private ReadingValue ToReadingValue(int value, string units, DateTime timeStamp)
-        {
-            return new ReadingValue(value, units, timeStamp);
         }
     }
 }

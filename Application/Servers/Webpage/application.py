@@ -318,7 +318,7 @@ def readingsPage():
     return render_template_string("""
             {% extends "main.html" %}
             {% block content %}
-            <iframe src="/dash" style="height: 100vh; width: 100%; scrolling: no; frameborder: 0">
+            <iframe src="/dash" style="height: 100vh; width: 100%; scrolling: no; frameborder: 0"></iframe>
             {% endblock %}""", login = login)
 
 ############################################

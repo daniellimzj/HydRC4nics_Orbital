@@ -58,7 +58,7 @@ def startHandler(update, context):
                                 chat_id = chatid,
                                 parse_mode = ParseMode.HTML,
                                 reply_markup = InlineKeyboardMarkup(mn.startOverMenu))
-        return START
+        return INITIAL
     
     if query.data == "ACTUATOR":
         context.bot.send_message(

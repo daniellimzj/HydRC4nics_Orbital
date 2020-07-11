@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<p>Sign Up</p>
+<h4>Sign Up</h4>
 
 <div>
     <form method="POST" action="{{ url_for('signup') }}">
@@ -14,21 +14,21 @@
             {{ wtf.form_field(signupForm.name) }}
             {{ wtf.form_field(signupForm.password) }}
             {{ wtf.form_field(signupForm.confirm) }}
-            <div class="alert alert-primary" role="alert">
+            <div class="alert alert-info" role="alert">
               Please be reminded to never reuse the same password! Always use a new password for every account.
             </div>
           </div>
 
            <sdiv class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Sign Up">
+                <input class="btn btn-info" type="submit" value="Sign Up">
             </div>
           </div>
     </form>
 
     <p></p>
     {% if register %}
-    <div class="alert alert-primary" role="alert">
+    <div class="alert alert-info" role="alert">
       Signed Up Successfully!
     </div>
     {% endif %}

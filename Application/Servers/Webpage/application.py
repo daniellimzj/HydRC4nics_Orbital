@@ -52,6 +52,7 @@ def login():
     
     return render_template('login.html', login = login, loginForm = loginForm)
 
+############################################
 
 @application.route("/signup", methods=("GET", "POST"))
 def signup():
@@ -71,6 +72,8 @@ def signup():
     
     return render_template('signup.html', login = login, signupForm = signupForm, register = register)
 
+############################################
+
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
 
@@ -80,7 +83,6 @@ def logout():
     print(session["user"])
 
     return render_template('logout.html', login = login)
-
 
 ############################################
 
@@ -140,6 +142,9 @@ def viewCommands():
 
     login = bool(session["user"])
 
+    if not login:
+        return render_template("error.html", login = login)
+
     numRecent = 0
     start = None
     end = None
@@ -190,6 +195,9 @@ def sendCommands():
 
     login = bool(session["user"])
 
+    if not login:
+        return render_template("error.html", login = login)
+
     success = False
     commandForm = f.CommandForm()
 
@@ -215,6 +223,9 @@ def addActuators():
 
     login = bool(session["user"])
 
+    if not login:
+        return render_template("error.html", login = login)
+
     actuator = None
 
     addForm = f.AddForm()
@@ -230,6 +241,8 @@ def addActuators():
 def addSensors():
 
     login = bool(session["user"])
+    if not login:
+        return render_template("error.html", login = login)
 
     sensor = None
 
@@ -246,6 +259,9 @@ def addSensors():
 def updateCommand(actuatorId, commandId):
 
     login = bool(session["user"])
+    if not login:
+        return render_template("error.html", login = login)
+
 
     command = db.getCommands(commandId = commandId)
     actuator = db.getCommands(actuatorId = actuatorId)
@@ -270,6 +286,8 @@ def updateCommand(actuatorId, commandId):
 def updateActuators():
 
     login = bool(session["user"])
+    if not login:
+        return render_template("error.html", login = login)
 
     updateForm = f.UpdateActuatorForm()
     
@@ -291,6 +309,8 @@ def updateActuators():
 def updateSensors():
 
     login = bool(session["user"])
+    if not login:
+        return render_template("error.html", login = login)
 
     updateForm = f.UpdateSensorForm()
     

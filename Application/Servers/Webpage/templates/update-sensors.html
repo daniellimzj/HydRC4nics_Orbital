@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<p> Update an Existing Sensor</p>
+<h4> Update an Existing Sensor</h4>
 
 <div>
     <form method="POST" action="{{ url_for('updateSensors') }}">
@@ -11,21 +11,23 @@
 
           <div class="control-group">
             {{ wtf.form_field(updateForm.selectSensor) }}
-            {{ wtf.form_field(updateForm.position) }}
-            {{ wtf.form_field(updateForm.type) }}
+            {{ wtf.form_field(updateForm.position, placeholder = "e.g. 1") }}
+            {{ wtf.form_field(updateForm.type, placeholder = "e.g. Light") }}
           </div>
 
            <sdiv class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Update">
+                <input class="btn btn-info" type="submit" value="Update">
             </div>
           </div>
     </form>
 </div>
 
 {% if sensor %}
-<div class="alert alert-primary" role="alert">
-  Updated Sensor Successfully!
+<div class="container">
+  <div class="alert alert-info" role="alert">
+    Updated Sensor Successfully!
+  </div>
 </div>
 {% endif %}
 

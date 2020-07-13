@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EFCoreSample.Monitoring.Domain;
 using EFCoreSample.Monitoring.Requests;
 using EFCoreSample.Monitoring.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCoreSample.Monitoring.Controllers
@@ -23,8 +24,7 @@ namespace EFCoreSample.Monitoring.Controllers
             _converter = converter;
         }
         
-        // [Authorize(Policy = "NUSOnly"), HttpGet]
-        [HttpGet]
+        [Authorize(Policy = "AnalystOnly"), HttpGet]
         public async Task<ActionResult<IEnumerable<Reading>>> GetAll()
         {
             var result = await _services.GetAll();
@@ -40,7 +40,7 @@ namespace EFCoreSample.Monitoring.Controllers
         }
         
         // Start the serial port readings by giving the COM port and the sensor sequence in the POST body
-        [HttpPost("serial/start/{com}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPost("serial/start/{com}")]
         public ActionResult<SerialPort> SerialStart(string com, [FromBody] List<Guid> sequence)
         {
             // Create the serial port with basic settings
@@ -49,7 +49,7 @@ namespace EFCoreSample.Monitoring.Controllers
         }
         
         // Stop the readings
-        [HttpGet("serial/stop")]
+        [Authorize(Policy = "OperatorOnly"), HttpGet("serial/stop")]
         public ActionResult<SerialPort> SerialStop()
         {
             // Create the serial port with basic settings
@@ -57,7 +57,7 @@ namespace EFCoreSample.Monitoring.Controllers
             return Ok(port);
         }
 
-        [HttpPost("{sensorId}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPost("{sensorId}")]
         public async Task<ActionResult<Reading>> Post(Guid sensorId, [FromBody] ReadingRequest request)
         {
             var reading = _converter.ToReadingValue(request);
@@ -66,7 +66,7 @@ namespace EFCoreSample.Monitoring.Controllers
             return Ok(_converter.ToReadingResponse(result));
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPut("{id}")]
         public async Task<ActionResult<Reading>> Put(Guid id, [FromBody] ReadingRequest request)
         {
             var reading = _converter.ToReadingValue(request);
@@ -77,7 +77,7 @@ namespace EFCoreSample.Monitoring.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _services.Delete(id);

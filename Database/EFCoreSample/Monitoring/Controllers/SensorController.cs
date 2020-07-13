@@ -6,6 +6,7 @@ using EFCoreSample.Monitoring.Domain;
 using EFCoreSample.Monitoring.Requests;
 using EFCoreSample.Monitoring.Responses;
 using EFCoreSample.Monitoring.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCoreSample.Monitoring.Controllers
@@ -23,7 +24,7 @@ namespace EFCoreSample.Monitoring.Controllers
             _converter = converter;
         }
 
-        [HttpGet]
+        [Authorize(Policy = "AnalystOnly"), HttpGet]
         public async Task<ActionResult<IEnumerable<SensorResponse>>> GetAll()
         {
             var result = await _service.GetAll();
@@ -31,7 +32,6 @@ namespace EFCoreSample.Monitoring.Controllers
         }
 
         [HttpGet("latest/{num}")]
-
         public async Task<ActionResult<IEnumerable<SensorResponse>>> GetLatest(int num)
         {
             var result = await _service.GetAllLatest(num);
@@ -39,7 +39,6 @@ namespace EFCoreSample.Monitoring.Controllers
         }
 
         [HttpGet("range/{start}/{end}")]
-
         public async Task<ActionResult<IEnumerable<SensorResponse>>> GetAllRange(DateTime start, DateTime end)
         {
             var result = await _service.GetAllRange(start, end);
@@ -70,14 +69,14 @@ namespace EFCoreSample.Monitoring.Controllers
             return Ok(_converter.ToSensorResponse(result));
         }
 
-        [HttpPost]
+        [Authorize(Policy = "OperatorOnly"), HttpPost]
         public async Task<ActionResult<SensorResponse>> Post([FromBody] SensorRequest request)
         {
             return Ok(_converter.ToSensorResponse(await _service.Create(_converter.ToSensorValue(request))));
         }
 
 
-        [HttpPut("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPut("{id}")]
         public async Task<ActionResult<SensorResponse>> Put(Guid id, [FromBody] SensorRequest request)
         {
             var result = await _service.Update(id, _converter.ToSensorValue(request));
@@ -85,7 +84,7 @@ namespace EFCoreSample.Monitoring.Controllers
             return Ok(_converter.ToSensorResponse(result));
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _service.Delete(id);

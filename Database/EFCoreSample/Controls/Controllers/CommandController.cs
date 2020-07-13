@@ -23,8 +23,7 @@ namespace EFCoreSample.Controls.Controllers
             _converter = converter;
         }
         
-        //[Authorize(Policy = "OperatorOnly"), HttpGet]
-        [HttpGet]
+        [Authorize(Policy = "AnalystOnly"), HttpGet]
         public async Task<ActionResult<IEnumerable<Command>>> GetAll()
         {
             var result = await _services.GetAll();
@@ -39,7 +38,7 @@ namespace EFCoreSample.Controls.Controllers
             return Ok(_converter.ToCommandResponse(result));
         }
 
-        [HttpPost("{actuatorId}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPost("{actuatorId}")]
         public async Task<ActionResult<Command>> Post(Guid actuatorId, [FromBody] CommandRequest request)
         {
             var command = _converter.ToCommandValue(request);
@@ -48,7 +47,7 @@ namespace EFCoreSample.Controls.Controllers
             return Ok(_converter.ToCommandResponse(result));
         }
 
-        [HttpPut("{actuatorId}/{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPut("{actuatorId}/{id}")]
         public async Task<ActionResult<Command>> Put(Guid id, Guid actuatorId, [FromBody] CommandRequest request)
         {
             var command = _converter.ToCommandValue(request);
@@ -58,8 +57,7 @@ namespace EFCoreSample.Controls.Controllers
             return Ok(_converter.ToCommandResponse(response));
         }
 
-
-        [HttpDelete("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _services.Delete(id);

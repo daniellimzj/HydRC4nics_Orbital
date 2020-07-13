@@ -229,39 +229,45 @@ Claim Request:
 
 ## API Endpoints
 
-| HTTP Method   | Claim Auth    | Endpoint
-| ------------- | -----------   | ----------
-| POST/GET      |               | /Sensor
-| PUT/DELETE/GET|               | /Sensor/{id}
-| GET           |               | /Sensor/latest/{num}
-| GET           |               | /Sensor/range/{start}/{end}
-| GET           |               | /Sensor/{id}/latest/{num}
-| GET           |               | /Sensor/{id}/range/{start}/{end}
-| GET           |               | /Reading
-| POST          |               | /Reading/{sensorId}
-| PUT/DELETE/GET|               | /Reading/{id}
-| POST          |               | /Reading/serial/start/{com}
-| GET           |               | /Reading/serial/stop
-| POST/GET      |               | /Actuator
-| PUT/DELETE/GET|               | /Actuator/{id}
-| GET           |               | /Actuator/active
-| GET           |               | /Actuator/latest/{num}
-| GET           |               | /Actuator/range/{start}/{end}
-| GET           |               | /Actuator/{id}/active
-| GET           |               | /Actuator/{id}/latest/{num}
-| GET           |               | /Actuator/{id}/range/{start}/{end}
-| GET           |               | /Command
-| POST          |               | /Command/{actuatorId}
-| DELETE/GET    |               | /Command/{id}
-| PUT           |               | /Command/{actuatorId}/{id}
-| POST          |               | /Account/register
-| POST          |               | /Account/login
-| PUT           |               | /Account/update
-| DELETE        | master        | /Account/delete/{email}
-| POST          | master        | /Account/claim/add
-| POST          | master        | /Account/claim/remove
-| GET           | nus           | /Account/users
-| GET           | nus           | /Account/users/{claimType}/{claimValue}
+| HTTP Method | Claim Auth | Endpoint                                |
+| ----------- | ---------- | --------------------------------------- |
+| POST        | operator   | /Sensor                                 |
+| GET         | analyst    | /Sensor                                 |
+| PUT/DELETE  | operator   | /Sensor/{id}                            |
+| GET         |            | /Sensor/{id}                            |
+| GET         |            | /Sensor/latest/{num}                    |
+| GET         |            | /Sensor/range/{start}/{end}             |
+| GET         |            | /Sensor/{id}/latest/{num}               |
+| GET         |            | /Sensor/{id}/range/{start}/{end}        |
+| GET         |            | /Reading                                |
+| POST        | operator   | /Reading/{sensorId}                     |
+| PUT/DELETE  | operator   | /Reading/{id}                           |
+| GET         |            | /Reading/{id}                           |
+| POST        | operator   | /Reading/serial/start/{com}             |
+| GET         |            | /Reading/serial/stop                    |
+| POST        | operator   | /Actuator                               |
+| GET         | analyst    | /Actuator                               |
+| PUT/DELETE  | operator   | /Actuator/{id}                          |
+| GET         |            | /Actuator/{id}                          |
+| GET         |            | /Actuator/active                        |
+| GET         |            | /Actuator/latest/{num}                  |
+| GET         |            | /Actuator/range/{start}/{end}           |
+| GET         |            | /Actuator/{id}/active                   |
+| GET         |            | /Actuator/{id}/latest/{num}             |
+| GET         |            | /Actuator/{id}/range/{start}/{end}      |
+| GET         | analyst    | /Command                                |
+| POST        | operator   | /Command/{actuatorId}                   |
+| DELETE      | operator   | /Command/{id}                           |
+| GET         |            | /Command/{id}                           |
+| PUT         | operator   | /Command/{actuatorId}/{id}              |
+| POST        | operator   | /Account/register                       |
+| POST        | operator   | /Account/login                          |
+| PUT         | operator   | /Account/update                         |
+| DELETE      | master     | /Account/delete/{email}                 |
+| POST        | master     | /Account/claim/add                      |
+| POST        | master     | /Account/claim/remove                   |
+| GET         | nus        | /Account/users                          |
+| GET         | nus        | /Account/users/{claimType}/{claimValue} |
 
 ## References
 

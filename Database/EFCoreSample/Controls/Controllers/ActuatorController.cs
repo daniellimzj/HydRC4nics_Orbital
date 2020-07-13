@@ -6,6 +6,7 @@ using EFCoreSample.Controls.Domain;
 using EFCoreSample.Controls.Requests;
 using EFCoreSample.Controls.Responses;
 using EFCoreSample.Controls.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCoreSample.Controls.Controllers
@@ -23,7 +24,7 @@ namespace EFCoreSample.Controls.Controllers
             _converter = converter;
         }
 
-        [HttpGet]
+        [Authorize(Policy = "AnalystOnly"), HttpGet]
         public async Task<ActionResult<IEnumerable<ActuatorResponse>>> GetAll()
         {
             var result = await _service.GetAll();
@@ -38,7 +39,6 @@ namespace EFCoreSample.Controls.Controllers
         }
         
         [HttpGet("latest/{num}")]
-
         public async Task<ActionResult<IEnumerable<ActuatorResponse>>> GetLatest(int num)
         {
             var result = await _service.GetAllLatest(num);
@@ -46,7 +46,6 @@ namespace EFCoreSample.Controls.Controllers
         }
 
         [HttpGet("range/{start}/{end}")]
-
         public async Task<ActionResult<IEnumerable<ActuatorResponse>>> GetAllRange(DateTime start, DateTime end)
         {
             var result = await _service.GetAllRange(start, end);
@@ -85,14 +84,14 @@ namespace EFCoreSample.Controls.Controllers
             return Ok(_converter.ToActuatorResponse(result));
         }
 
-        [HttpPost]
+        [Authorize(Policy = "OperatorOnly"), HttpPost]
         public async Task<ActionResult<ActuatorResponse>> Post([FromBody] ActuatorRequest request)
         {
             return Ok(_converter.ToActuatorResponse(await _service.Create(_converter.ToActuatorValue(request))));
         }
 
 
-        [HttpPut("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpPut("{id}")]
         public async Task<ActionResult<ActuatorResponse>> Put(Guid id, [FromBody] ActuatorRequest request)
         {
             var result = await _service.Update(id, _converter.ToActuatorValue(request));
@@ -100,7 +99,7 @@ namespace EFCoreSample.Controls.Controllers
             return Ok(_converter.ToActuatorResponse(result));
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Policy = "OperatorOnly"), HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _service.Delete(id);

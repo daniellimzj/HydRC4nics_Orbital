@@ -27,7 +27,7 @@ Session(application)
 
 @application.route("/", methods=('GET', 'POST'))
 def home():
-    if session["user"] is None:
+    if session.get("user") is None:
         session["user"] = {}
     login = bool(session["user"])
 
@@ -335,14 +335,7 @@ def readingsPage():
 
     login = bool(session["user"])
 
-    return render_template_string("""
-            {% extends "main.html" %}
-            {% block content %}
-            <div class="embed-responsive embed-responsive-16by9 p-2">
-            <iframe class="embed-responsive-item p-2" src="/dash"></iframe>
-            </div>
-
-            {% endblock %}""", login = login)
+    return render_template("dashboard.html", login = login)
 
 ############################################
 
@@ -351,11 +344,7 @@ def downloadsPage():
     
     login = bool(session["user"])
 
-    return render_template_string("""
-        {% extends "main.html" %}
-        {% block content %}
-        <a href="{{ url_for('getCSV') }}">Click me to download latest.</a>
-        {% endblock %}""", login = login)
+    return render_template("csv.html", login = login)
 
 ############################################
 

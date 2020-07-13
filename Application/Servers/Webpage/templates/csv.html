@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+
+
+<h4> Download Sensor Data as CSV</h4>
+<div>
+    <a href="{{ url_for('getCSV') }}">Click me to download latest.</a>
+</div>
+
+{% endblock %}

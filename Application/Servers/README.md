@@ -33,37 +33,40 @@ getReadings(readingId=None, sensorId=None, latest=None, start=None, end=None)
 getCommands(commandId=None, actuatorId=None, latest=None, start=None, end=None, active=False)
 
 # Returns sensor response
-addSensor(position, sensorType)
+addSensor(position, sensorType, token)
 
 # Returns actuator response
-addActuator(position, actuatorType)
+addActuator(position, actuatorType, token)
 
 # Returns command response
-addCommand(actuatorId, value, units, issuer, purpose, executeDate, repeat=0)
+addCommand(actuatorId, value, units, issuer, purpose, executeDate, token, repeat=0)
 
 # Returns sensor response
-updateSensor(sensorId, position, sensorType)
+updateSensor(sensorId, position, sensorType, token)
 
 # Returns actuator response
-updateActuator(actuatorId, position, actuatorType)
+updateActuator(actuatorId, position, actuatorType, token)
 
 # Call this without repeat parameter to stop repeating command, returns command response
-updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDate, executeDate, repeat=0)
+updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDate, executeDate, token, repeat=0)
 
 # Returns sensor response
-deleteSensor(sensorId)
+deleteSensor(sensorId, token)
 
 # Returns actuator response
-deleteActuator(actuatorId)
+deleteActuator(actuatorId, token)
 
 # Returns command response
-deleteCommand(commandId)
+deleteCommand(commandId, token)
 
 # Returns register response
 register(email, name, password)
 
 # Returns login response
 login(email, password)
+
+# Returns register response
+getUsers(token)
 ```
 
 ### Response formats

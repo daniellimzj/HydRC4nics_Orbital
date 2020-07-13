@@ -107,23 +107,35 @@ def getCommands(commandId=None, actuatorId=None, latest=None, start=None, end=No
     return r.json()
 
 # Returns sensor response
-def addSensor(position, sensorType):
+def addSensor(position, sensorType, token):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'position': position, 'type': sensorType}
 
-    r = requests.post(_url('/Sensor'), json=payload)
+    r = requests.post(_url('/Sensor'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'POST /Sensor {r.status_code}')
 
     return r.json()
 
 # Returns actuator response
-def addActuator(position, actuatorType):
+def addActuator(position, actuatorType, token):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'position': position, 'type': actuatorType}
 
-    r = requests.post(_url('/Actuator'), json=payload)
+    r = requests.post(_url('/Actuator'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'POST /Actuator {r.status_code}')
 
     return r.json()
 
 # Returns command response
-def addCommand(actuatorId, value, units, issuer, purpose, executeDate, repeat=0):
+def addCommand(actuatorId, value, units, issuer, purpose, executeDate, token, repeat=0):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'value': value,
                 'units': units,
                 'issuer': issuer,
@@ -132,28 +144,43 @@ def addCommand(actuatorId, value, units, issuer, purpose, executeDate, repeat=0)
                 'executeDate': executeDate.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
                 'repeat': repeat}
 
-    r = requests.post(_url(f'/Command/{actuatorId}'), json=payload)
+    r = requests.post(_url(f'/Command/{actuatorId}'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'POST /Command/{actuatorId} {r.status_code}')
 
     return r.json()
 
 # Returns sensor response
-def updateSensor(sensorId, position, sensorType):
+def updateSensor(sensorId, position, sensorType, token):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'position': position, 'type': sensorType}
 
-    r = requests.put(_url(f'/Sensor/{sensorId}'), json=payload)
+    r = requests.put(_url(f'/Sensor/{sensorId}'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'PUT /Sensor/{sensorId} {r.status_code}')
 
     return r.json()
 
 # Returns actuator response
-def updateActuator(actuatorId, position, actuatorType):
+def updateActuator(actuatorId, position, actuatorType, token):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'position': position, 'type': actuatorType}
 
-    r = requests.put(_url(f'/Actuator/{actuatorId}'), json=payload)
+    r = requests.put(_url(f'/Actuator/{actuatorId}'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'PUT /Actuator/{actuatorId} {r.status_code}')
 
     return r.json()
 
 # Call this without repeat parameter to stop repeating command, returns command response
-def updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDate, executeDate, repeat=0):
+def updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDate, executeDate, token, repeat=0):
+    headers={'Authorization': f'Bearer {token}'}
+    
     payload = {'value': value,
                 'units': units,
                 'issuer': issuer,
@@ -162,25 +189,43 @@ def updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDat
                 'executeDate': executeDate.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
                 'repeat': repeat}
 
-    r = requests.put(_url(f'/Command/{actuatorId}/{commandId}'), json=payload)
+    r = requests.put(_url(f'/Command/{actuatorId}/{commandId}'), json=payload, headers=headers)
+
+    if r.status_code is not 200:
+        print(f'PUT /Command/{actuatorId}/{commandId} {r.status_code}')
 
     return r.json()
 
 # Returns sensor response
-def deleteSensor(sensorId):
-    r = requests.delete(_url(f'/Sensor/{sensorId}'))
+def deleteSensor(sensorId, token):
+    headers={'Authorization': f'Bearer {token}'}
+
+    r = requests.delete(_url(f'/Sensor/{sensorId}'), headers=headers)
+
+    if r.status_code is not 200:
+        print(f'DELETE /Sensor/{sensorId} {r.status_code}')
 
     return r.json()
 
 # Returns actuator response
-def deleteActuator(actuatorId):
-    r = requests.delete(_url(f'/Actuator/{actuatorId}'))
+def deleteActuator(actuatorId, token):
+    headers={'Authorization': f'Bearer {token}'}
+
+    r = requests.delete(_url(f'/Actuator/{actuatorId}'), headers=headers)
+
+    if r.status_code is not 200:
+        print(f'DELETE /Actuator/{actuatorId} {r.status_code}')
 
     return r.json()
 
 # Returns command response
-def deleteCommand(commandId):
-    r = requests.delete(_url(f'/Command/{commandId}'))
+def deleteCommand(commandId, token):
+    headers={'Authorization': f'Bearer {token}'}
+
+    r = requests.delete(_url(f'/Command/{commandId}'), headers=headers)
+
+    if r.status_code is not 200:
+        print(f'DELETE /Command/{commandId} {r.status_code}')
 
     return r.json()
 
@@ -192,6 +237,9 @@ def register(email, name, password):
 
     r = requests.post(_identity('/Account/register'), json=payload)
 
+    if r.status_code is not 200:
+        print(f'POST /Account/register {r.status_code}')
+
     return r.json()
 
 # Returns login response
@@ -201,8 +249,12 @@ def login(email, password):
 
     r = requests.post(_identity('/Account/login'), json=payload)
 
+    if r.status_code is not 200:
+        print(f'POST /Account/login {r.status_code}')
+
     return r.json()
 
+# Returns register response
 def getUsers(token):
     headers={'Authorization': f'Bearer {token}'}
 

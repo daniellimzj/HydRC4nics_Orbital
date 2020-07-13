@@ -3,9 +3,10 @@
 
 {% block content %}
 
-<p> View Commands Sent to Actuators</p>
 
-<div>
+
+<div class="container">
+    <h4> View Commands Sent to Actuators</h4>
     <form method="POST" action="{{ url_for('viewCommands') }}">
         {{ commandsForm.csrf_token }}
           <div class="control-group">
@@ -23,21 +24,24 @@
 
            <div class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="View">
+                <input class="btn btn-info" type="submit" value="View">
             </div>
           </div>
     </form>
 </div>
 
 {% for message in get_flashed_messages() %}
-<div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
+<div class = "container">
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
 </div>
 {% endfor %}
 
+<p></p>
 
-<div>
+<div class="container">
 {% if actuatorFlag %}
 
     <p>{{ commandsList['type']  }} {{ commandsList['position'] }}</p>

@@ -3,21 +3,21 @@
 
 {% block content %}
 
-<p> Send Commands to Actuators</p>
+<h4> Send Commands to Actuators</h4>
 <div>
     <form method="POST" action="{{ url_for('sendCommands') }}">
         {{ commandForm.csrf_token }}
           <div class="control-group my-auto">
             {{ wtf.form_field(commandForm.selectActuator) }}
-            {{ wtf.form_field(commandForm.value) }}
-            {{ wtf.form_field(commandForm.units) }}
-            {{ wtf.form_field(commandForm.issuer) }}
-            {{ wtf.form_field(commandForm.purpose) }}
+            {{ wtf.form_field(commandForm.value, placeholder = "e.g. 100") }}
+            {{ wtf.form_field(commandForm.units, placeholder = "e.g. %") }}
+            {{ wtf.form_field(commandForm.issuer, placeholder = "e.g. Prof Pang") }}
+            {{ wtf.form_field(commandForm.purpose, placeholder = "e.g. Automating lights timing") }}
             {{ wtf.form_field(commandForm.executeDate) }}
             {{ wtf.form_field(commandForm.repeat, placeholder = "0 to stop repeat") }}
 
            <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Send">
+                <input class="btn btn-info" type="submit" value="Send">
            </div>
           </div>
     </form>
@@ -32,7 +32,7 @@
 
 <p></p>
 {% if success %}
-<div class="alert alert-primary" role="alert">
+<div class="alert alert-info" role="alert">
   Command Sent Successfully!
 </div>
 {% endif %}

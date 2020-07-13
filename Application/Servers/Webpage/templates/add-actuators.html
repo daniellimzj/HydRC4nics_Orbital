@@ -3,20 +3,20 @@
 
 {% block content %}
 
-<p> Add a New Actuator</p>
+<h4> Add a New Actuator</h4>
 
 <div>
     <form method="POST" action="{{ url_for('addActuators') }}">
         {{ addForm.csrf_token }}
 
           <div class="control-group">
-            {{ wtf.form_field(addForm.position) }}
-            {{ wtf.form_field(addForm.type) }}
+            {{ wtf.form_field(addForm.position, placeholder = "e.g. 1") }}
+            {{ wtf.form_field(addForm.type, placeholder = "e.g. Light") }}
           </div>
 
            <sdiv class="control-group">
             <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Add">
+                <input class="btn btn-info" type="submit" value="Add">
             </div>
           </div>
     </form>
@@ -24,7 +24,7 @@
 
 <p></p>
 {% if actuator %}
-<div class="alert alert-primary" role="alert">
+<div class="alert alert-info" role="alert">
   Added Actuator Successfully!
 </div>
 {% endif %}

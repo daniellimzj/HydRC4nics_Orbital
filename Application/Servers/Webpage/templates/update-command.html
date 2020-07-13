@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h3>Updating command for {{ actuator['type'] }} {{ actuator['position'] }}</h3>
+<h4>Updating command for {{ actuator['type'] }} {{ actuator['position'] }}</h4>
 
 <div>
     <form method="POST" action="{{ url_for('updateCommand', actuatorId = actuatorId, commandId = commandId) }}">
@@ -25,14 +25,14 @@
             {{ wtf.form_field(updateForm.repeat, placeholder = command["repeat"], value = command["repeat"]) }}
 
            <div class="controls">
-                <input class="btn btn-primary" type="submit" value="Update">
+                <input class="btn btn-info" type="submit" value="Update">
            </div>
           </div>
     </form>
 </div>
 
 {% if newCommand %}
-<div class="alert alert-primary" role="alert">
+<div class="alert alert-info" role="alert">
   Updated Command Successfully!
 </div>
 {% endif %}

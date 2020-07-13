@@ -35,7 +35,7 @@ namespace EFCoreSample.Controls.Repositories
                 .Include(actuator => actuator.Commands)
                 .ToListAsync();
             dataModels.ForEach(actuator => actuator.Commands = actuator.Commands
-                .Where(command => command.Completed == false)
+                .Where(command => (command.Completed == false) && (command.ExecuteDate > DateTime.Now))
                 .OrderByDescending(command => command.ExecuteDate)
                 .ToList());
             dataModels = dataModels.Where(actuator => actuator.Commands.Any()).ToList();

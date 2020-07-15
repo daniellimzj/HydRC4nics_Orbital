@@ -56,7 +56,8 @@ namespace Identity.Account
             {
                 Token = tokenHandler.WriteToken(token),
                 Id = account.Guid,
-                Name = account.Name
+                Name = account.Name,
+                Claims = account.Claims
             };
             return (model, true);
         }

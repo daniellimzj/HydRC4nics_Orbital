@@ -8,5 +8,6 @@ namespace Identity.Account.Payload
         public string Id { get; set; }
         public string Token { get; set; }
         public string Name { get; set; }
+        public IEnumerable<Claim> Claims { get; set; }
     }
 }

@@ -42,11 +42,19 @@ def login():
     loginForm = f.LoginForm()
 
     if loginForm.validate_on_submit():
-        print("placeholder")
         session["user"] = db.login(loginForm.email.data, loginForm.password.data)
-        print(session["user"])
 
         login = bool(session["user"])
+
+        global operator
+        operator = False
+        print(session["user"]["claims"])
+
+        for claim in session["user"]["claims"]:
+            if claim["value"] == "operator":
+                operator = True
+
+        print(operator)
 
         return render_template('index.html', login = login)
     
@@ -79,8 +87,8 @@ def logout():
 
     session["user"] = {}
     login = bool(session["user"])
-
-    print(session["user"])
+    global operator
+    operator = False
 
     return render_template('logout.html', login = login)
 
@@ -143,7 +151,11 @@ def viewCommands():
     login = bool(session["user"])
 
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     numRecent = 0
     start = None
@@ -196,7 +208,11 @@ def sendCommands():
     login = bool(session["user"])
 
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     success = False
     commandForm = f.CommandForm()
@@ -208,8 +224,9 @@ def sendCommands():
         command = db.addCommand(actuatorId = commandForm.selectActuator.data, value = commandForm.value.data,
                              units = commandForm.units.data, issuer = commandForm.issuer.data,
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
-                             repeat = commandForm.repeat.data)
+                             token = session["user"]["token"], repeat = commandForm.repeat.data)
         success = True
+        print(command)
     
     else:
         success = False
@@ -224,14 +241,18 @@ def addActuators():
     login = bool(session["user"])
 
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     actuator = None
 
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
-        actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data)
+        actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data, token = session["user"]["token"])
 
     return render_template("add-actuators.html", addForm = addForm, login = login, actuator = actuator)
 
@@ -241,15 +262,22 @@ def addActuators():
 def addSensors():
 
     login = bool(session["user"])
+
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     sensor = None
 
     addForm = f.AddForm()
 
     if addForm.validate_on_submit():
-        sensor = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data)
+
+        print(session["user"]["token"])
+        sensor = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data, token = session["user"]["token"])
 
     return render_template("add-sensors.html", addForm = addForm, login = login, sensor = sensor)
 
@@ -259,8 +287,13 @@ def addSensors():
 def updateCommand(actuatorId, commandId):
 
     login = bool(session["user"])
+    
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
 
     command = db.getCommands(commandId = commandId)
@@ -276,7 +309,7 @@ def updateCommand(actuatorId, commandId):
                                    value = updateForm.value.data, units = command['units'],
                                    issuer = updateForm.issuer.data, purpose = updateForm.purpose.data,
                                    issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
-                                   repeat = updateForm.repeat.data)
+                                   token = session["user"]["token"], repeat = updateForm.repeat.data)
 
     return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator, login = login, newCommand = newCommand)
     
@@ -286,8 +319,13 @@ def updateCommand(actuatorId, commandId):
 def updateActuators():
 
     login = bool(session["user"])
+    
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     updateForm = f.UpdateActuatorForm()
     
@@ -299,7 +337,8 @@ def updateActuators():
     if updateForm.validate_on_submit():
         actuator = db.updateActuator(actuatorId = updateForm.selectActuator.data,
                        position = updateForm.position.data,
-                       actuatorType = updateForm.type.data)
+                       actuatorType = updateForm.type.data,
+                       token = session["user"]["token"])
 
     return render_template("update-actuators.html", updateForm = updateForm, login = login, actuator = actuator)
 
@@ -309,8 +348,13 @@ def updateActuators():
 def updateSensors():
 
     login = bool(session["user"])
+
     if not login:
-        return render_template("error.html", login = login)
+        loginForm = f.LoginForm()
+        return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif not operator:
+        return render_template('unauthorised.html', login = login)
 
     updateForm = f.UpdateSensorForm()
     
@@ -322,7 +366,8 @@ def updateSensors():
     if updateForm.validate_on_submit():
         sensor = db.updateSensor(sensorId = updateForm.selectSensor.data,
                        position = updateForm.position.data,
-                       sensorType = updateForm.type.data)
+                       sensorType = updateForm.type.data,
+                       token = session["user"]["token"])
 
     return render_template("update-sensors.html", updateForm = updateForm, login = login, sensor = sensor)
 
@@ -358,6 +403,15 @@ def getCSV():
         mimetype="text/csv",
         headers={"Content-disposition":
                  "attachment; filename=mydata.csv"})
+
+############################################
+
+@application.errorhandler(500)
+def error(e):
+
+    login = bool(session["user"])
+    
+    return render_template("error.html", login = login)
 
 ############################################
 

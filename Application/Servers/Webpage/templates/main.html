@@ -42,8 +42,6 @@
               </div>
             </li>
 
-            {% if login %}
-
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Commands
@@ -71,38 +69,6 @@
                   <a class="dropdown-item" href="{{ url_for('updateSensors') }}">Sensors</a>
                 </div>
               </li>
-
-            {% else %}
-
-              <li class="nav-item dropdown disabled">
-                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Commands
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{{ url_for('viewCommands') }}">View</a>
-                  <a class="dropdown-item" href="{{ url_for('sendCommands') }}">Send</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown disabled">
-                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Add
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{{ url_for('addActuators') }}">Actuators</a>
-                  <a class="dropdown-item" href="{{ url_for('addSensors') }}">Sensors</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Update
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{{ url_for('updateActuators') }}">Actuators</a>
-                  <a class="dropdown-item" href="{{ url_for('updateSensors') }}">Sensors</a>
-                </div>
-              </li>
-
-            {% endif %}
           </ul>
 
           <ul class="navbar-nav navbar-right">

@@ -130,6 +130,7 @@ Database Server
 
     ```bash
     cd Database/csv
+    chmod +x exportCSV.sh
     ./exportCSV.sh
     cd ../..
     ```

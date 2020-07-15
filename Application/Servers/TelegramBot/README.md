@@ -29,3 +29,4 @@ The Python Telegram Bot wrapper is used to access the Telegram Bot API. Users wi
 - <https://stackoverflow.com/questions/10805589/convert-json-date-string-to-python-datetime>
 - <https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior>
 - <https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#message-formatting-bold-italic-code->
+- <http://www.unicode.org/emoji/charts/full-emoji-list.html#1f642>

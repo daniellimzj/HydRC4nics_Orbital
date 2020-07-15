@@ -38,6 +38,17 @@ To stop repeating commands, set `"repeat": 0`.
 - Login
 - Edit claims
 
+## Export Database to CSV
+
+```bash
+sqlite3 EFCoreSample/EFCoreSample.db
+sqlite> .headers on
+sqlite> .mode csv
+sqlite> .output readings.csv
+sqlite> SELECT * FROM Readings;
+sqlite> .quit
+```
+
 ## JSON Formats
 
 Sensor Request:
@@ -328,3 +339,7 @@ public IActionResult GoodFireAndForget()
 ### Status code 405 to 401
 
 <https://stackoverflow.com/questions/59408865/net-core-api-returns-405method-not-allowed-when-having-authorize-attribute>
+
+### SQLite to CSV
+
+<https://www.sqlitetutorial.net/sqlite-tutorial/sqlite-export-csv/>

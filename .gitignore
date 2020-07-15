@@ -10,3 +10,4 @@
 **/*.deb
 **/__pycache__/*
 **/flask_session/**
+**/*.csv

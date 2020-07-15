@@ -126,6 +126,14 @@ Database Server
     cd ../..
     ```
 
+9. Export data to CSV (run once in a while)
+
+    ```bash
+    cd Database/csv
+    ./exportCSV.sh
+    cd ../..
+    ```
+
 ## Run (use tmux)
 
 Database

@@ -6,7 +6,32 @@
 
 <h4> Download Sensor Data as CSV</h4>
 <div>
-    <a href="{{ url_for('getCSV') }}">Click me to download latest.</a>
+    <table class = "table table-bordered table-hover table-sm">
+        <thead class = "thead-dark">
+            <tr>
+                <th scope = "col">Table Type</th>
+                <th scope = "col">Download Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Readings</td>
+                <td><a href="{{ url_for('getReadingsCSV') }}">Download latest.</a></td>
+            </tr>
+            <tr>
+                <td>Sensors</td>
+                <td><a href="{{ url_for('getSensorsCSV') }}">Download latest.</a></td>
+            </tr>
+            <tr>
+                <td>Commands</td>
+                <td><a href="{{ url_for('getCommandsCSV') }}">Download latest.</a></td>
+            </tr>
+            <tr>
+                <td>Actuators</td>
+                <td><a href="{{ url_for('getActuatorsCSV') }}">Download latest.</a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

@@ -38,17 +38,6 @@ To stop repeating commands, set `"repeat": 0`.
 - Login
 - Edit claims
 
-## Export Database to CSV
-
-```bash
-sqlite3 EFCoreSample/EFCoreSample.db
-sqlite> .headers on
-sqlite> .mode csv
-sqlite> .output readings.csv
-sqlite> SELECT * FROM Readings;
-sqlite> .quit
-```
-
 ## JSON Formats
 
 Sensor Request:

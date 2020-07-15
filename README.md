@@ -131,7 +131,7 @@ Database Server
 Database
 
 ```bash
-tmux
+tmux new -s database
 cd Database/EFCoreSample
 dotnet run
 ```
@@ -139,7 +139,7 @@ dotnet run
 Identity
 
 ```bash
-tmux
+tmux new -s identity
 cd Database/Identity
 dotnet run
 ```
@@ -147,7 +147,7 @@ dotnet run
 Telegram Bot
 
 ```bash
-tmux
+tmux new -s bot
 cd Application
 python3 bot.py
 ```
@@ -155,7 +155,7 @@ python3 bot.py
 Webpage
 
 ```bash
-tmux
+tmux new -s web
 cd Application
 waitress-serve web:app
 ```

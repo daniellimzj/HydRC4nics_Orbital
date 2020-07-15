@@ -29,7 +29,7 @@ def start(update, context):
     mn.initialiseMenus()
 
     #Actual message
-    context.bot.send_message(text = f'Hi {str(user.first_name)}! You have {("normal", "administrator")[admin]} privileges. What would you like to do?',
+    context.bot.send_message(text = f'Hi {str(user.first_name)}! You have {("<b>normal</b>", "<b>administrator</b>")[admin]} privileges. What would you like to do?',
                              chat_id = chatid,
                              parse_mode = ParseMode.HTML,
                              reply_markup = (InlineKeyboardMarkup(mn.startMenuNormal), InlineKeyboardMarkup(mn.startMenuAdmin))[admin])
@@ -38,7 +38,7 @@ def start(update, context):
 # Callback query handler to loop conversation handler
 def startOver(update, context):
 
-    context.bot.send_message(text = f'Hi {str(user.first_name)}! You have {("normal", "administrator")[admin]} privileges. What would you like to do?',
+    context.bot.send_message(text = f'Hi {str(user.first_name)}! You have {("<b>normal</b>", "<b>administrator<b/>")[admin]} privileges. What would you like to do?',
                              chat_id = chatid,
                              parse_mode = ParseMode.HTML,
                              reply_markup = (InlineKeyboardMarkup(mn.startMenuNormal), InlineKeyboardMarkup(mn.startMenuAdmin))[admin])

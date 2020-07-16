@@ -31,6 +31,13 @@ def home():
         session["user"] = {}
     login = bool(session["user"])
 
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
+
     return render_template('index.html', login = login)
 
 ############################################
@@ -55,6 +62,10 @@ def login():
                 operator = True
 
         print(operator)
+
+        global expiretime
+        expiretime = datetime.datetime.now() + datetime.timedelta(minutes = 30)
+        print(expiretime.strftime("%m/%d/%Y, %H:%M:%S"))
 
         return render_template('index.html', login = login)
     
@@ -148,6 +159,13 @@ def getData():
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
 
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
+
     login = bool(session["user"])
 
     if not login:
@@ -205,6 +223,13 @@ def viewCommands():
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
+
     login = bool(session["user"])
 
     if not login:
@@ -238,6 +263,13 @@ def sendCommands():
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
+
     login = bool(session["user"])
 
     if not login:
@@ -260,6 +292,13 @@ def addActuators():
 
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
+
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
 
     login = bool(session["user"])
 
@@ -285,6 +324,13 @@ def addSensors():
 
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
+
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
 
     login = bool(session["user"])
     
@@ -318,6 +364,13 @@ def updateCommand(actuatorId, commandId):
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
 
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
+
     login = bool(session["user"])
     
     if not login:
@@ -346,6 +399,13 @@ def updateActuators():
 
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
+
+    if sessionExpired():
+        session["user"] = {}
+        login = bool(session["user"])
+        global operator
+        operator = False
+        return render_template("session-expired.html", login = login)
 
     login = bool(session["user"])
 
@@ -451,6 +511,12 @@ def error(e):
     login = bool(session["user"])
     
     return render_template("error.html", login = login)
+
+############################################
+
+def sessionExpired():
+    print((datetime.datetime.now() > expiretime))
+    return datetime.datetime.now() > expiretime
 
 ############################################
 

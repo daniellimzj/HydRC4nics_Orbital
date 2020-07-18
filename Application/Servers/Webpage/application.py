@@ -1,6 +1,7 @@
 import sys
 import requests
 import datetime
+import dateutil
 
 from flask import Flask, render_template_string, render_template, flash, Response, session
 
@@ -31,13 +32,6 @@ def home():
         session["user"] = {}
     login = bool(session["user"])
 
-    if sessionExpired():
-        session["user"] = {}
-        login = bool(session["user"])
-        global operator
-        operator = False
-        return render_template("session-expired.html", login = login)
-
     return render_template('index.html', login = login)
 
 ############################################
@@ -50,6 +44,7 @@ def login():
 
     if loginForm.validate_on_submit():
         session["user"] = db.login(loginForm.email.data, loginForm.password.data)
+        print(session['user'])
 
         login = bool(session["user"])
 
@@ -158,8 +153,9 @@ def getData():
 
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
-
-    if sessionExpired():
+    
+    print(expiretime.strftime("%m/%d/%Y, %H:%M:%S"))
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -211,7 +207,8 @@ def viewCommands():
         end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
 
         commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), start = start, end = end, active = activeFlag)
-        print(commandsList, end = '\n\n\n')
+        for command in commandsList:
+            print(command, end = '\n\n')
 
     else:
         commandsList = []
@@ -223,7 +220,7 @@ def viewCommands():
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -263,7 +260,7 @@ def sendCommands():
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -293,7 +290,7 @@ def addActuators():
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -325,7 +322,7 @@ def addSensors():
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -364,7 +361,7 @@ def updateCommand(actuatorId, commandId):
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -400,7 +397,7 @@ def updateActuators():
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
 
-    if sessionExpired():
+    if sessionExpired(expiretime):
         session["user"] = {}
         login = bool(session["user"])
         global operator
@@ -514,9 +511,15 @@ def error(e):
 
 ############################################
 
-def sessionExpired():
+def sessionExpired(expiretime):
     print((datetime.datetime.now() > expiretime))
     return datetime.datetime.now() > expiretime
+
+############################################
+
+@application.template_filter('datetimeformat')
+def datetimeformat(value, format="%m/%d/%y at %I:%M:%S%p"):
+    return dateutil.parser.parse(value).strftime(format)
 
 ############################################
 

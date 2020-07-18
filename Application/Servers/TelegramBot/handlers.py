@@ -28,6 +28,7 @@ def start(update, context):
 
     global token
     token = db.getOperatorToken(660)
+    print(token)
     global expiretime
     expiretime = datetime.datetime.now() + datetime.timedelta(minutes = 15)
 

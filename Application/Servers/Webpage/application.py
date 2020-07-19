@@ -79,9 +79,7 @@ def signup():
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
 
-    session["user"] = {}
-    session["operator"] = False
-    session["expiretime"] = None
+    resetSession()
     login = bool(session["user"])
     global operator
     operator = False
@@ -143,19 +141,17 @@ def getData():
 
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
-    
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
 
     login = bool(session["user"])
 
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -207,18 +203,16 @@ def viewCommands():
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
-
     login = bool(session["user"])
 
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -246,18 +240,16 @@ def sendCommands():
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
-
     login = bool(session["user"])
 
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -276,18 +268,16 @@ def addActuators():
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
-
     login = bool(session["user"])
 
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -307,18 +297,16 @@ def addSensors():
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
-
     login = bool(session["user"])
     
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -345,18 +333,16 @@ def updateCommand(actuatorId, commandId):
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
-
     login = bool(session["user"])
     
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -381,18 +367,18 @@ def updateActuators():
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
 
-    if sessionExpired(session["expiretime"]):
-        session["user"] = {}
-        session["operator"] = False
-        session["expiretime"] = None
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = login)
+
 
     login = bool(session["user"])
 
     if not login:
         loginForm = f.LoginForm()
         return render_template('login.html', login = login, loginForm = loginForm)
+
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = login)
 
     elif not session["operator"]:
         return render_template('unauthorised.html', login = login)
@@ -496,7 +482,16 @@ def error(e):
 ############################################
 
 def sessionExpired(expiretime):
+    if expiretime is None:
+        return False
     return datetime.datetime.now() > expiretime
+
+############################################
+
+def resetSession():
+    session["user"] = {}
+    session["operator"] = False
+    session["expiretime"] = None
 
 ############################################
 

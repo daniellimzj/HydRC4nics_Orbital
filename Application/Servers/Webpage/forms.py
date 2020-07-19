@@ -101,9 +101,9 @@ class CommandForm(FlaskForm):
 
 # to update commands
 class UpdateCommandForm(FlaskForm):
-    value = IntegerField('New value:', validators = [DataRequired()])
-    issuer = StringField('New issuer:', validators = [DataRequired()])
-    purpose = StringField('New purpose:', validators = [DataRequired()])
+    value = IntegerField('New Value:', validators = [DataRequired()])
+    issuer = StringField('New Issuer:', validators = [DataRequired()])
+    purpose = StringField('New Purpose:', validators = [DataRequired()])
     executeDate = DateTimeLocalField('New date to execute:', format = '%Y-%m-%dT%H:%M', validators = [DataRequired()])
     repeat = IntegerField('New minutes between repetitions:')
 

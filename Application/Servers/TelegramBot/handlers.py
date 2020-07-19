@@ -28,7 +28,6 @@ def start(update, context):
 
     global token
     token = db.getOperatorToken(660)
-    print(token)
     global expiretime
     expiretime = datetime.datetime.now() + datetime.timedelta(minutes = 15)
 
@@ -149,7 +148,6 @@ def dataHandler(update, context):
     query = update.callback_query
     if query.data == "RECENT":
         viewdata = db.getReadings(latest = 1)
-        print(viewdata, end  = '\n\n\n')
 
         messageText = "<b>All Recent Readings:</b>\n\n"
 
@@ -198,7 +196,6 @@ def readingsHandler(update, context):
 
     if int(reply) in range(0, 11):
         viewdata = db.getReadings(sensorId = idToBePassed, latest = int(reply))
-        print(viewdata)
         sensorText = str(viewdata['type']) + ' ' + str(viewdata['position'])
         messageText = f"<b>{sensorText} Readings:</b>\n\n"
 

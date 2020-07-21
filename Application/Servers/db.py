@@ -251,6 +251,8 @@ def login(email, password):
 
     if r.status_code is not 200:
         print(f'POST /Account/login {r.status_code}')
+        print(str(r.status_code))
+        return str(r.status_code)
 
     return r.json()
 

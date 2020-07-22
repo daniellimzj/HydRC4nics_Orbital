@@ -18,10 +18,10 @@
             <p>Previous purpose: {{ command["purpose"] }}</p>
             {{ wtf.form_field(updateForm.purpose, placeholder = command["purpose"], value = command["purpose"]) }}
 
-            <p>Previous execute date: {{ command["executeDate"] }}</p>
-            {{ wtf.form_field(updateForm.executeDate, value = command["executeDate"]) }}
+            <p>Previous execute date: {{ command["executeDate"]|datetimeformat }}</p>
+            {{ wtf.form_field(updateForm.executeDate) }}
 
-            <p>Previous number of times to repeat: {{ command["repeat"] }}</p>
+            <p>Previous minutes between repetitions: {{ command["repeat"] }}</p>
             {{ wtf.form_field(updateForm.repeat, placeholder = command["repeat"], value = command["repeat"]) }}
 
            <div class="controls">
@@ -31,10 +31,12 @@
     </form>
 </div>
 
+</br>
+
 {% if newCommand %}
-<div class="alert alert-info" role="alert">
-  Updated Command Successfully!
-</div>
+  <div class="alert alert-info" role="alert">
+    Updated Command Successfully!
+  </div>
 {% endif %}
 
 {% endblock %}

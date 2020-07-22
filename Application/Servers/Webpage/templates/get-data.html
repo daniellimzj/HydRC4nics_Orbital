@@ -13,7 +13,7 @@
 
             {{ wtf.form_field(sensorForm.selectSensor) }}
 
-            <p>Select the readings you want to view:</p>
+            <h6>Select the readings you want to view:</h6>
             {{ wtf.form_field(sensorForm.selectReadings.recent, placeholder = "Number of recent readings") }}
             {{ wtf.form_field(sensorForm.selectReadings.start) }}
             {{ wtf.form_field(sensorForm.selectReadings.end) }}
@@ -27,18 +27,20 @@
     </form>
 </div>
 
+</br>
+
 {% for message in get_flashed_messages() %}
-<div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
-</div>
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
 {% endfor %}
 
-<p></p>
+</br>
 
-<div class="container" style="width:40%">
+<div class="container" style="width:50%">
 {% if sensorFlag %}
-    <p>{{ readingsList['type']  }} {{ readingsList['position'] }}</p>
+    <h6>{{ readingsList['type']  }} {{ readingsList['position'] }}</h6>
     <table class = "table table-bordered table-hover table-sm">
         <thead class = "thead-dark">
             <tr>
@@ -52,12 +54,11 @@
             <tr>
                 <td>{{ reading['value']  }}</td>
                 <td>{{ reading['units']  }}</td>
-                <td>{{ reading['timeStamp']  }}</td>
+                <td>{{ reading['timeStamp']|datetimeformat }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 
 {% else %}
 
@@ -81,7 +82,7 @@
                     <tr>
                         <td>{{ reading['value']  }}</td>
                         <td>{{ reading['units']  }}</td>
-                        <td>{{ reading['timeStamp']  }}</td>
+                        <td>{{ reading['timeStamp']|datetimeformat  }}</td>
                     </tr>
                 {% endfor %}
             {% endfor %}

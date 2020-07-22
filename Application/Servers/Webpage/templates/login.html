@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h3>Login</h3>
+<h4>Login</h4>
 
 <div>
     <form method="POST" action="{{ url_for('login') }}">
@@ -24,10 +24,17 @@
 
 </br>
 
+{% if loginFailed %}
+<div class="container">
+  <div class="alert alert-info" role="alert">
+    Wrong email or password! Please try again!
+  </div>
+</div>
+{% endif %}
+
+
 <div class = "container">
-  <p>
     <a href="{{ url_for('signup') }}">Don't have an account? Sign up now!</a>
-  </p>
 </div>
 
 {% endblock %}

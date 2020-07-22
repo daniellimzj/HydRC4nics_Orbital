@@ -3,10 +3,9 @@
 
 {% block content %}
 
+<h4> View Commands Sent to Actuators</h4>
 
-
-<div class="container">
-    <h4> View Commands Sent to Actuators</h4>
+<div>
     <form method="POST" action="{{ url_for('viewCommands') }}">
         {{ commandsForm.csrf_token }}
           <div class="control-group">
@@ -30,18 +29,20 @@
     </form>
 </div>
 
+</br>
+
 {% for message in get_flashed_messages() %}
-<div class = "container">
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
+
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
 </div>
+
 {% endfor %}
 
-<p></p>
+</br>
 
-<div class="container">
+<div>
 {% if actuatorFlag %}
 
     <p>{{ commandsList['type']  }} {{ commandsList['position'] }}</p>
@@ -65,8 +66,8 @@
                 <td>{{ command['units']  }}</td>
                 <td>{{ command['issuer']  }}</td>
                 <td>{{ command['purpose']  }}</td>
-                <td>{{ command['issueDate']  }}</td>
-                <td>{{ command['executeDate']  }}</td>
+                <td>{{ command['issueDate']|datetimeformat  }}</td>
+                <td>{{ command['executeDate']|datetimeformat  }}</td>
                 <td>{{ command['repeat']  }}</td>
 
                 {% if command['completed'] %}
@@ -106,8 +107,8 @@
                         <td>{{ command['units']  }}</td>
                         <td>{{ command['issuer']  }}</td>
                         <td>{{ command['purpose']  }}</td>
-                        <td>{{ command['issueDate']  }}</td>
-                        <td>{{ command['executeDate']  }}</td>
+                        <td>{{ command['issueDate']|datetimeformat  }}</td>
+                        <td>{{ command['executeDate']|datetimeformat  }}</td>
                         <td>{{ command['repeat']  }}</td>
 
                         {% if command['completed'] %}

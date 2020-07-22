@@ -23,8 +23,13 @@ def start(update, context):
     global user, chatid, admin
     user = update.message.from_user
     chatid = update.message.chat.id
-    admin = True #user.username in tb.administrators
+    admin = user.username in tb.administrators
 
+
+    global token
+    token = db.getOperatorToken(660)
+    global expiretime
+    expiretime = datetime.datetime.now() + datetime.timedelta(minutes = 15)
 
     mn.initialiseMenus()
 
@@ -106,12 +111,20 @@ def commandHandler(update, context):
             inputUnits = '%'
         else: inputUnits = 'units'
 
+        if (datetime.datetime.now() > expiretime):
+            context.bot.send_message(
+                            text = f"Your session has expired. Please rerun the /start command!",
+                                chat_id = chatid,
+                                parse_mode = ParseMode.HTML)
+            return COMMAND
+
         db.addCommand(actuatorId = idToBePassed, 
                       value = int(reply),
                       units = inputUnits,
                       issuer = str(user.username),
                       purpose = "Telegram Command",
                       executeDate = datetime.datetime.now() + datetime.timedelta(seconds = 5),
+                      token = token,
                       repeat=0)
 
         context.bot.send_message(
@@ -135,7 +148,6 @@ def dataHandler(update, context):
     query = update.callback_query
     if query.data == "RECENT":
         viewdata = db.getReadings(latest = 1)
-        print(viewdata, end  = '\n\n\n')
 
         messageText = "<b>All Recent Readings:</b>\n\n"
 
@@ -184,7 +196,6 @@ def readingsHandler(update, context):
 
     if int(reply) in range(0, 11):
         viewdata = db.getReadings(sensorId = idToBePassed, latest = int(reply))
-        print(viewdata)
         sensorText = str(viewdata['type']) + ' ' + str(viewdata['position'])
         messageText = f"<b>{sensorText} Readings:</b>\n\n"
 

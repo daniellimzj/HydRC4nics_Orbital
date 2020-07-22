@@ -1,6 +1,7 @@
 import sys
 import requests
 import datetime
+import dateutil
 
 from flask import Flask, render_template_string, render_template, flash, Response, session
 
@@ -29,75 +30,72 @@ Session(application)
 def home():
     if session.get("user") is None:
         session["user"] = {}
-    login = bool(session["user"])
+    session["login"] = bool(session["user"])
 
-    return render_template('index.html', login = login)
+    return render_template('index.html', login = session["login"])
 
 ############################################
 
 @application.route("/login", methods=("GET", "POST"))
 def login():
 
-    login = bool(session["user"])
     loginForm = f.LoginForm()
+    loginFailed = False
 
     if loginForm.validate_on_submit():
+
         session["user"] = db.login(loginForm.email.data, loginForm.password.data)
 
-        login = bool(session["user"])
+        if session["user"] =="401":
+            resetSession()
+            loginFailed = True
+            return render_template('login.html', login = session["login"], loginForm = loginForm, loginFailed = loginFailed)
 
-        global operator
-        operator = False
-        print(session["user"]["claims"])
+        session["login"] = bool(session["user"])
+
+        print(session["user"]["token"])
+
+        session["operator"] = False
 
         for claim in session["user"]["claims"]:
             if claim["value"] == "operator":
-                operator = True
+                session["operator"] = True
 
-        print(operator)
+        session["expiretime"] = datetime.datetime.now() + datetime.timedelta(minutes = 30)
 
-        return render_template('index.html', login = login)
+        return render_template('index.html', login = session["login"])
     
-    return render_template('login.html', login = login, loginForm = loginForm)
+    return render_template('login.html', login = session["login"], loginForm = loginForm)
 
 ############################################
 
 @application.route("/signup", methods=("GET", "POST"))
 def signup():
 
-    login = bool(session["user"])
     signupForm = f.SignupForm()
     register = None
 
     if signupForm.validate_on_submit():
-        print(signupForm.email.data)
-        print(signupForm.name.data)
-        print(signupForm.password.data)
-        print(signupForm.confirm.data)
 
         register = db.register(signupForm.email.data, signupForm.name.data, signupForm.password.data)
-        print(register)
     
-    return render_template('signup.html', login = login, signupForm = signupForm, register = register)
+    return render_template('signup.html', login = session["login"], signupForm = signupForm, register = register)
 
 ############################################
 
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
 
-    session["user"] = {}
-    login = bool(session["user"])
+    resetSession()
     global operator
     operator = False
 
-    return render_template('logout.html', login = login)
+    return render_template('logout.html', login = session["login"])
 
 ############################################
 
 @application.route("/get-data", methods = ("GET", "POST"))
 def getData():
-
-    login = bool(session["user"])
 
     numRecent = 0
     start = None
@@ -141,21 +139,25 @@ def getData():
     else:
         readingsList = []
 
-    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm, sensorFlag = sensorFlag, login = login)
+    return render_template("get-data.html", readingsList = readingsList, sensorForm = sensorForm,
+                           sensorFlag = sensorFlag, login = session["login"])
 
 ############################################
 
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
 
-    login = bool(session["user"])
-
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     numRecent = 0
     start = None
@@ -193,26 +195,29 @@ def viewCommands():
         end = commandsForm.selectCommands.end.data if commandsForm.selectCommands.end.data else None
 
         commandsList = db.getCommands(actuatorId = actuatorId, latest = int(numRecent), start = start, end = end, active = activeFlag)
-        print(commandsList, end = '\n\n\n')
 
     else:
         commandsList = []
 
-    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm, commandsFlag = commandsFlag, actuatorFlag = actuatorFlag, login = login)
+    return render_template("view-commands.html", commandsList = commandsList, commandsForm = commandsForm,
+                           commandsFlag = commandsFlag, actuatorFlag = actuatorFlag, login = session["login"])
 
 ############################################
 
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
-    login = bool(session["user"])
-
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     success = False
     commandForm = f.CommandForm()
@@ -226,26 +231,28 @@ def sendCommands():
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
                              token = session["user"]["token"], repeat = commandForm.repeat.data)
         success = True
-        print(command)
     
     else:
         success = False
 
-    return render_template("send-commands.html", commandForm = commandForm, success = success, login = login)  
+    return render_template("send-commands.html", commandForm = commandForm, success = success, login = session["login"])  
 
 ############################################
 
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
-    login = bool(session["user"])
-
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        login = bool(session["user"])
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     actuator = None
 
@@ -254,21 +261,23 @@ def addActuators():
     if addForm.validate_on_submit():
         actuator = db.addActuator(position = addForm.position.data, actuatorType = addForm.type.data, token = session["user"]["token"])
 
-    return render_template("add-actuators.html", addForm = addForm, login = login, actuator = actuator)
+    return render_template("add-actuators.html", addForm = addForm, login = session["login"], actuator = actuator)
 
 ############################################
 
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
-    login = bool(session["user"])
-
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     sensor = None
 
@@ -276,24 +285,25 @@ def addSensors():
 
     if addForm.validate_on_submit():
 
-        print(session["user"]["token"])
         sensor = db.addSensor(position = addForm.position.data, sensorType = addForm.type.data, token = session["user"]["token"])
 
-    return render_template("add-sensors.html", addForm = addForm, login = login, sensor = sensor)
+    return render_template("add-sensors.html", addForm = addForm, login = session["login"], sensor = sensor)
 
 ############################################
 
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
-
-    login = bool(session["user"])
     
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
 
     command = db.getCommands(commandId = commandId)
@@ -304,28 +314,30 @@ def updateCommand(actuatorId, commandId):
     updateForm = f.UpdateCommandForm()
 
     if updateForm.validate_on_submit():
-        print(updateForm.value.data, end='\n\n\n')
         newCommand = db.updateCommand(actuatorId = actuatorId, commandId = commandId,
                                    value = updateForm.value.data, units = command['units'],
                                    issuer = updateForm.issuer.data, purpose = updateForm.purpose.data,
                                    issueDate = datetime.datetime.now(), executeDate = updateForm.executeDate.data,
                                    token = session["user"]["token"], repeat = updateForm.repeat.data)
 
-    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm, command = command, actuator = actuator, login = login, newCommand = newCommand)
+    return render_template("update-command.html", actuatorId = actuatorId, commandId = commandId, updateForm = updateForm,
+                           command = command, actuator = actuator, login = session["login"], newCommand = newCommand)
     
 ############################################
 
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
 
-    login = bool(session["user"])
-    
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     updateForm = f.UpdateActuatorForm()
     
@@ -340,21 +352,24 @@ def updateActuators():
                        actuatorType = updateForm.type.data,
                        token = session["user"]["token"])
 
-    return render_template("update-actuators.html", updateForm = updateForm, login = login, actuator = actuator)
+    return render_template("update-actuators.html", updateForm = updateForm, login = session["login"], actuator = actuator)
 
 ############################################
 
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
 
-    login = bool(session["user"])
 
-    if not login:
+    if not session["login"]:
         loginForm = f.LoginForm()
-        return render_template('login.html', login = login, loginForm = loginForm)
+        return render_template('login.html', login = session["login"], loginForm = loginForm)
 
-    elif not operator:
-        return render_template('unauthorised.html', login = login)
+    elif sessionExpired(session["expiretime"]):
+        resetSession()
+        return render_template("session-expired.html", login = session["login"])
+
+    elif not session["operator"]:
+        return render_template('unauthorised.html', login = session["login"])
 
     updateForm = f.UpdateSensorForm()
     
@@ -369,7 +384,7 @@ def updateSensors():
                        sensorType = updateForm.type.data,
                        token = session["user"]["token"])
 
-    return render_template("update-sensors.html", updateForm = updateForm, login = login, sensor = sensor)
+    return render_template("update-sensors.html", updateForm = updateForm, login = session["login"], sensor = sensor)
 
 ############################################
 
@@ -380,7 +395,7 @@ def readingsPage():
 
     login = bool(session["user"])
 
-    return render_template("dashboard.html", login = login)
+    return render_template("dashboard.html", login = session["login"])
 
 ############################################
 
@@ -389,7 +404,7 @@ def downloadsPage():
     
     login = bool(session["user"])
 
-    return render_template("csv.html", login = login)
+    return render_template("csv.html", login = session["login"])
 
 ############################################
 
@@ -450,7 +465,28 @@ def error(e):
 
     login = bool(session["user"])
     
-    return render_template("error.html", login = login)
+    return render_template("error.html", login = session["login"])
+
+############################################
+
+def sessionExpired(expiretime):
+    if expiretime is None:
+        return False
+    return datetime.datetime.now() > expiretime
+
+############################################
+
+def resetSession():
+    session["user"] = {}
+    session["operator"] = False
+    session["expiretime"] = None
+    session["login"] = False
+
+############################################
+
+@application.template_filter('datetimeformat')
+def datetimeformat(value, format="%m/%d/%y at %I:%M:%S%p"):
+    return dateutil.parser.parse(value).strftime(format)
 
 ############################################
 

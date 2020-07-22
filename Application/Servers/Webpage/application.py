@@ -13,8 +13,9 @@ from .. import db
 from .. import config
 
 from . import forms as f
-
+from . import util
 from . import dashboard
+from . import getCSV
 
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
@@ -47,18 +48,16 @@ def login():
         session["user"] = db.login(loginForm.email.data, loginForm.password.data)
 
         if session["user"] =="401":
-            resetSession()
+            util.resetSession(session)
             loginFailed = True
             return render_template('login.html', login = session["login"], loginForm = loginForm, loginFailed = loginFailed)
 
         session["login"] = bool(session["user"])
 
-        print(session["user"]["token"])
-
         session["operator"] = False
 
         for claim in session["user"]["claims"]:
-            if claim["value"] == "operator":
+            if claim["value"] == "operator" or claim["value"] == "master":
                 session["operator"] = True
 
         session["expiretime"] = datetime.datetime.now() + datetime.timedelta(minutes = 30)
@@ -86,7 +85,7 @@ def signup():
 @application.route("/logout", methods=("GET", "POST"))
 def logout():
 
-    resetSession()
+    util.resetSession(session)
     global operator
     operator = False
 
@@ -147,17 +146,9 @@ def getData():
 @application.route("/view-commands", methods = ("GET", "POST"))
 def viewCommands():
 
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     numRecent = 0
     start = None
@@ -207,17 +198,9 @@ def viewCommands():
 @application.route("/send-commands", methods = ("GET", "POST"))
 def sendCommands():
 
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     success = False
     commandForm = f.CommandForm()
@@ -226,7 +209,7 @@ def sendCommands():
     commandForm.selectActuator.choices = [(actuator['id'], f"{actuator['type']} {actuator['position']}") for actuator in actuatorsList]
 
     if commandForm.validate_on_submit():
-        command = db.addCommand(actuatorId = commandForm.selectActuator.data, value = commandForm.value.data,
+        _ = db.addCommand(actuatorId = commandForm.selectActuator.data, value = commandForm.value.data,
                              units = commandForm.units.data, issuer = commandForm.issuer.data,
                              purpose = commandForm.purpose.data, executeDate = commandForm.executeDate.data,
                              token = session["user"]["token"], repeat = commandForm.repeat.data)
@@ -242,17 +225,9 @@ def sendCommands():
 @application.route("/add-actuators", methods = ("GET", "POST"))
 def addActuators():
 
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        login = bool(session["user"])
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     actuator = None
 
@@ -268,16 +243,9 @@ def addActuators():
 @application.route("/add-sensors", methods = ("GET", "POST"))
 def addSensors():
 
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     sensor = None
 
@@ -294,17 +262,9 @@ def addSensors():
 @application.route("/update-command/<string:actuatorId>:<string:commandId>", methods = ("GET", "POST"))
 def updateCommand(actuatorId, commandId):
     
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
-
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     command = db.getCommands(commandId = commandId)
     actuator = db.getCommands(actuatorId = actuatorId)
@@ -328,16 +288,9 @@ def updateCommand(actuatorId, commandId):
 @application.route("/update-actuators", methods = ("GET", "POST"))
 def updateActuators():
 
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     updateForm = f.UpdateActuatorForm()
     
@@ -359,17 +312,9 @@ def updateActuators():
 @application.route("/update-sensors", methods = ("GET", "POST"))
 def updateSensors():
 
-
-    if not session["login"]:
-        loginForm = f.LoginForm()
-        return render_template('login.html', login = session["login"], loginForm = loginForm)
-
-    elif sessionExpired(session["expiretime"]):
-        resetSession()
-        return render_template("session-expired.html", login = session["login"])
-
-    elif not session["operator"]:
-        return render_template('unauthorised.html', login = session["login"])
+    expired, page = util.checkExpiry(session)
+    if expired:
+        return page
 
     updateForm = f.UpdateSensorForm()
     
@@ -392,95 +337,21 @@ dashboard.startDashboard(application)
 
 @application.route("/readings")
 def readingsPage():
-
-    login = bool(session["user"])
-
     return render_template("dashboard.html", login = session["login"])
 
 ############################################
 
+getCSV.main(application)
+
 @application.route("/downloads")
 def downloadsPage():
-    
-    login = bool(session["user"])
-
     return render_template("csv.html", login = session["login"])
-
-############################################
-
-@application.route("/getReadingsCSV")
-def getReadingsCSV():
-    with open("../Database/csv/readings.csv") as fp:
-         csv = fp.read()
-
-    return Response(
-        csv,
-        mimetype="text/csv",
-        headers={"Content-disposition":
-                 "attachment; filename=readings.csv"})
-
-############################################
-
-@application.route("/getSensorsCSV")
-def getSensorsCSV():
-    with open("../Database/csv/sensors.csv") as fp:
-         csv = fp.read()
-
-    return Response(
-        csv,
-        mimetype="text/csv",
-        headers={"Content-disposition":
-                 "attachment; filename=sensors.csv"})
-
-############################################
-
-@application.route("/getCommandsCSV")
-def getCommandsCSV():
-    with open("../Database/csv/commands.csv") as fp:
-         csv = fp.read()
-
-    return Response(
-        csv,
-        mimetype="text/csv",
-        headers={"Content-disposition":
-                 "attachment; filename=commands.csv"})
-
-############################################
-
-@application.route("/getActuatorsCSV")
-def getActuatorsCSV():
-    with open("../Database/csv/actuators.csv") as fp:
-         csv = fp.read()
-
-    return Response(
-        csv,
-        mimetype="text/csv",
-        headers={"Content-disposition":
-                 "attachment; filename=actuators.csv"})
 
 ############################################
 
 @application.errorhandler(500)
 def error(e):
-
-    login = bool(session["user"])
-    
     return render_template("error.html", login = session["login"])
-
-############################################
-
-def sessionExpired(expiretime):
-    if expiretime is None:
-        return False
-    return datetime.datetime.now() > expiretime
-
-############################################
-
-def resetSession():
-    session["user"] = {}
-    session["operator"] = False
-    session["expiretime"] = None
-    session["login"] = False
 
 ############################################
 
@@ -492,9 +363,7 @@ def datetimeformat(value, format="%m/%d/%y at %I:%M:%S%p"):
 
 if __name__ == "__main__":
     # http://flask.pocoo.org/docs/0.12/errorhandling/#working-with-debuggers
-    # https://docs.aws.amazon.com/cloud9/latest/user-guide/app-preview.html
-    use_c9_debugger = False
-    application.run(use_debugger=not use_c9_debugger, debug=True,
-                    use_reloader=not use_c9_debugger, host='0.0.0.0', port=8080)
+    application.run(use_debugger=True, debug=True,
+                    use_reloader=True, host='0.0.0.0', port=8080)
 
 

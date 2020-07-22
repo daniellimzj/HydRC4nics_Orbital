@@ -78,10 +78,11 @@ Database Server
 2. Add environment variables to .bashrc
 
     ```bash
-    export BOT_TOKEN=REPLACE
+    export BOT_TOKEN=REPLACE:REPLACE
     export FLASK_SECRET=REPLACE
-    export DB_URL=REPLACE
+    export DB_URL=http://REPLACE
     export JWT_SECRET=REPLACE
+    export MASTER_USER=EMAIL/NAME/PASSWORD
     ```
 
 3. Install .NET SDK 3.1
@@ -94,14 +95,7 @@ Database Server
     dotnet tool install --global dotnet-ef
     ```
 
-5. Create EFcore secret
-
-    ```bash
-    touch ./Database/secret.txt
-    printf "REPLACE" > ./Database/secret.txt
-    ```
-
-6. Database migrations
+5. Database migrations
 
     ```bash
     cd Database/EFCoreSample
@@ -110,14 +104,7 @@ Database Server
     cd ../..
     ```
 
-7. Create master user
-
-    ```bash
-    touch ./Database/Identity/master.txt
-    printf "EMAIL/NAME/PASSWORD" > ./Database/Identity/master.txt
-    ```
-
-8. Identity migrations
+6. Identity migrations
 
     ```bash
     cd Database/Identity
@@ -126,7 +113,7 @@ Database Server
     cd ../..
     ```
 
-9. Export data to CSV (run once in a while)
+7. Export data to CSV (run once in a while)
 
     ```bash
     cd Database/csv

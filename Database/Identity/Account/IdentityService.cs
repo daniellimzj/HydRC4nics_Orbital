@@ -38,7 +38,7 @@ namespace Identity.Account
             if (!success) return (null, false);
 
             // Use a secret
-            var secret = Encoding.UTF8.GetBytes(await File.ReadAllTextAsync("../secret.txt"));
+            var secret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
 
             // Create token handlers and descriptor
             var tokenHandler = new JwtSecurityTokenHandler();

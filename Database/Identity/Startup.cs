@@ -99,7 +99,7 @@ namespace Identity
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IIdentityService, IdentityService>();
             
-            var secret = Encoding.UTF8.GetBytes(File.ReadAllText("../secret.txt"));
+            var secret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
 
             services.AddAuthentication(x =>
             {
@@ -161,15 +161,9 @@ namespace Identity
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
-                var masterDetails = (await File.ReadAllTextAsync("./master.txt"))?.Split("/");
-                if (masterDetails == null)
-                {
-                    Console.WriteLine("Could not open master details");
-                    return;
-                }
-
-                var (users, success) =
-                    await accountService.GetUsersByClaim(new ClaimRequestModel {Type = "job", Value = "master"});
+                var (users, success) = await accountService.GetUsersByClaim(
+                    new ClaimRequestModel {Type = "job", Value = "master"});
+                
                 if (!success)
                 {
                     Console.WriteLine("Could not get users");
@@ -179,6 +173,13 @@ namespace Identity
                 if (users.Any())
                 {
                     Console.WriteLine("Master user already exists");
+                    return;
+                }
+
+                var masterDetails = Environment.GetEnvironmentVariable("MASTER_USER")?.Split("/");
+                if (masterDetails == null)
+                {
+                    Console.WriteLine("Could not open master details");
                     return;
                 }
 

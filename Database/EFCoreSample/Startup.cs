@@ -33,7 +33,7 @@ namespace EFCoreSample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var secret = Encoding.UTF8.GetBytes(File.ReadAllText("../secret.txt"));
+            var secret = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET"));
 
             services.AddAuthentication(x =>
             {

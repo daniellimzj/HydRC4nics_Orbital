@@ -25,6 +25,9 @@ application.config["SESSION_PERMANENT"] = False
 application.config["SESSION_TYPE"] = "filesystem"
 Session(application)
 
+dashboard.startDashboard(application)
+getCSV.main(application)
+
 ############################################
 
 @application.route("/", methods=('GET', 'POST'))
@@ -333,15 +336,11 @@ def updateSensors():
 
 ############################################
 
-dashboard.startDashboard(application)
-
 @application.route("/readings")
 def readingsPage():
     return render_template("dashboard.html", login = session["login"])
 
 ############################################
-
-getCSV.main(application)
 
 @application.route("/downloads")
 def downloadsPage():

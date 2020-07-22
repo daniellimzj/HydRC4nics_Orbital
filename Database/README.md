@@ -332,3 +332,4 @@ public IActionResult GoodFireAndForget()
 ### SQLite to CSV
 
 <https://www.sqlitetutorial.net/sqlite-tutorial/sqlite-export-csv/>
+<https://stackoverflow.com/questions/5776660/export-from-sqlite-to-csv-using-shell-script>

@@ -128,16 +128,14 @@ Database
 
 ```bash
 tmux new -s database
-cd Database/EFCoreSample
-dotnet run
+dotnet run --project Database/EFCoreSample
 ```
 
 Identity
 
 ```bash
 tmux new -s identity
-cd Database/Identity
-dotnet run
+dotnet run --project  Database/Identity
 ```
 
 Telegram Bot

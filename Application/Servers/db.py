@@ -34,7 +34,8 @@ def getAllSensors():
     r = requests.get(_url('/Sensor/latest/0'))
     
     if r.status_code is not 200:
-        print(f'GET /Sensor/latest/0 {r.status_code}')
+        print(f'DB HTTP Error: GET /Sensor/latest/0 {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -43,7 +44,8 @@ def getAllActuators():
     r = requests.get(_url('/Actuator/latest/0'))
     
     if r.status_code is not 200:
-        print(f'GET /Actuator/latest/0 {r.status_code}')
+        print(f'DB HTTP Error: GET /Actuator/latest/0 {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -71,7 +73,8 @@ def getReadings(readingId=None, sensorId=None, latest=None, start=None, end=None
     r = requests.get(_url(path))
     
     if r.status_code is not 200:
-        print(f'GET {path} {r.status_code}')
+        print(f'DB HTTP Error: GET {path} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -102,7 +105,8 @@ def getCommands(commandId=None, actuatorId=None, latest=None, start=None, end=No
     r = requests.get(_url(path))
     
     if r.status_code is not 200:
-        print(f'GET {path} {r.status_code}')
+        print(f'DB HTTP Error: GET {path} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -115,7 +119,8 @@ def addSensor(position, sensorType, token):
     r = requests.post(_url('/Sensor'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'POST /Sensor {r.status_code}')
+        print(f'DB HTTP Error: POST /Sensor {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -128,7 +133,8 @@ def addActuator(position, actuatorType, token):
     r = requests.post(_url('/Actuator'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'POST /Actuator {r.status_code}')
+        print(f'DB HTTP Error: POST /Actuator {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -147,7 +153,8 @@ def addCommand(actuatorId, value, units, issuer, purpose, executeDate, token, re
     r = requests.post(_url(f'/Command/{actuatorId}'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'POST /Command/{actuatorId} {r.status_code}')
+        print(f'DB HTTP Error: POST /Command/{actuatorId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -160,7 +167,8 @@ def updateSensor(sensorId, position, sensorType, token):
     r = requests.put(_url(f'/Sensor/{sensorId}'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'PUT /Sensor/{sensorId} {r.status_code}')
+        print(f'DB HTTP Error: PUT /Sensor/{sensorId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -173,7 +181,8 @@ def updateActuator(actuatorId, position, actuatorType, token):
     r = requests.put(_url(f'/Actuator/{actuatorId}'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'PUT /Actuator/{actuatorId} {r.status_code}')
+        print(f'DB HTTP Error: PUT /Actuator/{actuatorId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -192,7 +201,8 @@ def updateCommand(actuatorId, commandId, value, units, issuer, purpose, issueDat
     r = requests.put(_url(f'/Command/{actuatorId}/{commandId}'), json=payload, headers=headers)
 
     if r.status_code is not 200:
-        print(f'PUT /Command/{actuatorId}/{commandId} {r.status_code}')
+        print(f'DB HTTP Error: PUT /Command/{actuatorId}/{commandId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -203,7 +213,8 @@ def deleteSensor(sensorId, token):
     r = requests.delete(_url(f'/Sensor/{sensorId}'), headers=headers)
 
     if r.status_code is not 200:
-        print(f'DELETE /Sensor/{sensorId} {r.status_code}')
+        print(f'DB HTTP Error: DELETE /Sensor/{sensorId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -214,7 +225,8 @@ def deleteActuator(actuatorId, token):
     r = requests.delete(_url(f'/Actuator/{actuatorId}'), headers=headers)
 
     if r.status_code is not 200:
-        print(f'DELETE /Actuator/{actuatorId} {r.status_code}')
+        print(f'DB HTTP Error: DELETE /Actuator/{actuatorId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -225,7 +237,8 @@ def deleteCommand(commandId, token):
     r = requests.delete(_url(f'/Command/{commandId}'), headers=headers)
 
     if r.status_code is not 200:
-        print(f'DELETE /Command/{commandId} {r.status_code}')
+        print(f'DB HTTP Error: DELETE /Command/{commandId} {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -238,7 +251,8 @@ def register(email, name, password):
     r = requests.post(_identity('/Account/register'), json=payload)
 
     if r.status_code is not 200:
-        print(f'POST /Account/register {r.status_code}')
+        print(f'DB HTTP Error: POST /Account/register {r.status_code}')
+        return str(r.status_code)
 
     return r.json()
 
@@ -250,8 +264,7 @@ def login(email, password):
     r = requests.post(_identity('/Account/login'), json=payload)
 
     if r.status_code is not 200:
-        print(f'POST /Account/login {r.status_code}')
-        print(str(r.status_code))
+        print(f'DB HTTP Error: POST /Account/login {r.status_code}')
         return str(r.status_code)
 
     return r.json()
@@ -263,6 +276,7 @@ def getUsers(token):
     r = requests.get(_identity('/Account/users'), headers=headers)
 
     if r.status_code is not 200:
-        print(f'GET /Account/users {r.status_code}')
+        print(f'DB HTTP Error: GET /Account/users {r.status_code}')
+        return str(r.status_code)
 
     return r.json()

@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 TOKEN = config.BOT_TOKEN
 
 # A few global variables
-administrators = ['goopod', 'kstonekuan', 'Jiaaaahuiiiii', 'samleewy', 'maabell']
+administrators = ['goopod', 'kstonekuan', 'Jiaaaahuiiiii', 'samleewy', 'maabell', 'jiayushe']
 
 """
 Various functions

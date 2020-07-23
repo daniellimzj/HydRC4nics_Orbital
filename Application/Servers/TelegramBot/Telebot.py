@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 TOKEN = config.BOT_TOKEN
 
 # A few global variables
-administrators = ['goopod', 'kstonekuan']
+administrators = ['goopod', 'kstonekuan', 'Jiaaaahuiiiii', 'samleewy', 'maabell']
 
 """
 Various functions
@@ -40,7 +40,7 @@ def error(update, context):
 def main():
 
     """Start the bot."""
-    # Create the Updater and pass it your bot's token.
+    # Create the Updater and pass it your bogit oullt's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater(TOKEN, use_context=True)

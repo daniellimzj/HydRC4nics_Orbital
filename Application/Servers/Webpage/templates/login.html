@@ -25,16 +25,12 @@
 </br>
 
 {% if loginFailed %}
-<div class="container">
   <div class="alert alert-info" role="alert">
     Wrong email or password! Please try again!
   </div>
-</div>
 {% endif %}
 
 
-<div class = "container">
-    <a href="{{ url_for('signup') }}">Don't have an account? Sign up now!</a>
-</div>
+  <a href="{{ url_for('signup') }}">Don't have an account? Sign up now!</a>
 
 {% endblock %}

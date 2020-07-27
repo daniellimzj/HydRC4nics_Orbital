@@ -37,6 +37,8 @@ To stop repeating commands, set `"repeat": 0`.
 - Register
 - Login
 - Edit claims
+- Delete users
+- List users
 
 ## JSON Formats
 
